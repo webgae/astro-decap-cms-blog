@@ -1,0 +1,47 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const blogEntries = await getCollection('blog');
+    if (blogEntries.length === 0) {
+        return [{ params: { slug: '404' }, props: { entry: undefined } }];
+    }
+    return blogEntries.map(entry => {
+        // Usar el nombre del archivo sin la extensión como slug si entry.slug no está disponible
+        const slug = entry.slug || entry.id.replace(/\.(md|mdx)$/, '');
+        return {
+            params: { slug },
+            props: { entry },
+        };
+    });
+}
+
+const { entry } = Astro.props;
+
+// Si no se encuentra ninguna entrada (por ejemplo, aún no hay archivos de contenido), redirige a 404
+if (!entry) {
+    return Astro.redirect('/404');
+}
+
+const { title, description, pubDate, updatedDate, heroImage } = entry.data;
+
+// Verificar si entry.render es una función antes de llamarla
+let Content;
+try {
+    if (typeof entry.render === 'function') {
+        const rendered = await entry.render();
+        Content = rendered.Content;
+    } else {
+        // Si entry.render no es una función, intentar usar entry.body directamente
+        Content = () => entry.body || 'No se pudo cargar el contenido';
+    }
+} catch (error) {
+    console.error('Error al renderizar el contenido:', error);
+    Content = () => 'Error al cargar el contenido';
+}
+---
+
+<BlogPost slug={entry.slug} title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} heroImage={heroImage} relatedPosts={[]}>
+    <Content />
+</BlogPost>

@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FilteredProjects from '../components/FilteredProjects.jsx';
+
+// Importamos las imágenes locales de los proyectos.
+// DEBES descargar y guardar las imágenes en 'src/assets/projects/' con estos nombres.
+import imgElearning from '../assets/projects/platform-elearning.png';
+import imgStartup from '../assets/projects/web-startup.jpg';
+import imgBlog from '../assets/projects/blog-minimalista.jpg';
+import imgDashboard from '../assets/projects/dashboard-analiticas.jpg';
+import imgWooCommerce from '../assets/projects/tienda-woocommerce.jpg';
+import imgWpTheme from '../assets/projects/tema-wordpress.png';
+import imgSpa from '../assets/projects/app-spa.jpg';
+import imgLanding from '../assets/projects/landing-performance.jpg';
+import imgHeadless from '../assets/projects/headless-wordpress.jpg';
+import imgPwa from '../assets/projects/app-pwa.jpg';
+import imgAstroEcom from '../assets/projects/ecommerce-astro.jpg';
+import imgDataViz from '../assets/projects/data-viz.jpg';
+import imgApiRest from '../assets/projects/api-rest.jpg';
+import imgPhotography from '../assets/projects/portfolio-fotografia.jpg';
+import imgBlogRedesign from '../assets/projects/blog-redesign.jpg';
+import imgStripe from '../assets/projects/integracion-stripe.jpg';
+import imgWpPlugin from '../assets/projects/plugin-wordpress.jpg';
+import imgAuthApp from '../assets/projects/app-auth.jpg';
+
+// Reemplaza esto con tus propios proyectos
+const projects = [
+    {
+        title: 'Plataforma de E-learning',
+  
+        description: 'Desarrollo de una plataforma interactiva para cursos online, con gestión de usuarios, pagos y contenido multimedia.',
+        img: imgElearning,
+        tags: ['Astro', 'React', 'Node.js', 'Stripe'],
+        url: '#'
+    },
+    {
+        title: 'Web Corporativa para Startup',
+        description: 'Sitio web moderno y ultra-rápido para una startup tecnológica, enfocado en la captación de leads y optimizado para SEO.',
+        img: imgStartup,
+        tags: ['Astro', 'Tailwind CSS', 'SEO'],
+        url: '#'
+    },
+    {
+        title: 'Blog Personal Minimalista',
+        description: 'Creación de un blog personal con un diseño limpio, centrado en la legibilidad y el rendimiento, con integración de un CMS.',
+        img: imgBlog,
+        tags: ['Astro', 'Markdown', 'CMS'],
+        url: '#'
+    },
+    {
+        title: 'Dashboard de Analíticas',
+        description: 'Panel de control en tiempo real para la visualización de métricas clave de negocio, con gráficos interactivos y reportes personalizables.',
+        img: imgDashboard,
+        tags: ['SvelteKit', 'D3.js', 'API REST'],
+        url: '#'
+    },
+    {
+        title: 'Tienda Online con WordPress',
+        description: 'Desarrollo y personalización de una tienda online completa utilizando WordPress y WooCommerce. Optimización de rendimiento y diseño a medida.',
+        img: imgWooCommerce,
+        tags: ['WordPress', 'WooCommerce', 'PHP', 'CSS'],
+        url: '#'
+    },
+    {
+        title: 'Tema de WordPress a Medida',
+        description: 'Creación de un tema de WordPress desde cero para un portal de noticias, enfocado en la velocidad y una experiencia de edición sencilla para el cliente.',
+        img: imgWpTheme,
+        tags: ['WordPress', 'PHP', 'JavaScript', 'HTML'],
+        url: '#'
+    },
+    {
+        title: 'Aplicación Web Interactiva (SPA)',
+        description: 'Desarrollo de una Single Page Application para la gestión de reservas, utilizando JavaScript moderno para una interfaz fluida y dinámica sin recargas de página.',
+        img: imgSpa,
+        tags: ['JavaScript', 'API REST', 'HTML', 'CSS'],
+        url: '#'
+    },
+    {
+        title: 'Landing Page de Alto Rendimiento',
+        description: 'Diseño y maquetación de una landing page para una campaña de marketing, construida con HTML y CSS puros para una velocidad de carga máxima y perfecta optimización.',
+        img: imgLanding,
+        tags: ['HTML', 'CSS', 'Performance', 'JavaScript'],
+        url: '#'
+    },
+    {
+        title: 'Sitio Headless con WordPress y Next.js',
+        description: 'Portal de noticias con frontend en Next.js y backend gestionado por WordPress. Combina la flexibilidad de React con la potencia del CMS más popular.',
+        img: imgHeadless,
+        tags: ['WordPress', 'React', 'Next.js', 'API REST'],
+        url: '#'
+    },
+    {
+        title: 'Aplicación de Tareas (PWA)',
+        description: 'Una Progressive Web App para gestionar tareas que funciona offline y se puede instalar en el dispositivo. Construida con SvelteKit y Service Workers.',
+        img: imgPwa,
+        tags: ['SvelteKit', 'PWA', 'JavaScript'],
+        url: '#'
+    },
+    {
+        title: 'E-commerce Minimalista con Astro',
+        description: 'Tienda online de alto rendimiento construida con Astro y la API de Stripe para los pagos. Experiencia de compra rápida y fluida.',
+        img: imgAstroEcom,
+        tags: ['Astro', 'Stripe', 'E-commerce', 'Performance'],
+        url: '#'
+    },
+    {
+        title: 'Visualización de Datos del Clima',
+        description: 'Dashboard interactivo que muestra datos climáticos históricos utilizando D3.js para gráficos dinámicos y una API REST para obtener los datos.',
+        img: imgDataViz,
+        tags: ['D3.js', 'API REST', 'JavaScript', 'HTML', 'CSS'],
+        url: '#'
+    },
+    {
+        title: 'Portfolio de Fotografía con Tailwind',
+        description: 'Galería de fotos elegante y responsive construida con Astro y estilizada completamente con Tailwind CSS para un desarrollo rápido y un diseño consistente.',
+        img: imgPhotography,
+        tags: ['Astro', 'Tailwind CSS', 'SEO'],
+        url: '#'
+    },
+    {
+        title: 'Rediseño de Blog con Enfoque en Performance',
+        description: 'Migración de un blog existente a Astro para mejorar drásticamente los Core Web Vitals y la experiencia de lectura, resultando en un mejor posicionamiento SEO.',
+        img: imgBlogRedesign,
+        tags: ['Astro', 'Performance', 'SEO', 'Markdown'],
+        url: '#'
+    },
+    {
+        title: 'API REST para App Móvil',
+        description: 'Creación de una API RESTful segura y escalable con Node.js y Express para dar servicio a una aplicación móvil de gestión de eventos.',
+        img: imgApiRest,
+        tags: ['Node.js', 'API REST', 'JavaScript'],
+        url: '#'
+    },
+    {
+        title: 'Integración de Pasarela de Pagos',
+        description: 'Implementación de Stripe en un sitio de reservas para procesar pagos de forma segura, incluyendo la gestión de suscripciones y facturas automáticas.',
+        img: imgStripe,
+        tags: ['Stripe', 'API REST', 'JavaScript', 'E-commerce'],
+        url: '#'
+    },
+    {
+        title: 'Plugin de WordPress Personalizado',
+        description: 'Desarrollo de un plugin para WordPress que añade un sistema de reviews y valoraciones a medida para un sitio de recetas de cocina.',
+        img: imgWpPlugin,
+        tags: ['WordPress', 'PHP', 'JavaScript'],
+        url: '#'
+    },
+    {
+        title: 'Web App con Autenticación de Usuarios',
+        description: 'Aplicación web construida con SvelteKit que incluye un sistema completo de registro, inicio de sesión y perfiles de usuario protegidos.',
+        img: imgAuthApp,
+        tags: ['SvelteKit', 'JavaScript', 'HTML', 'CSS'],
+        url: '#'
+    }
+];
+---
+<Layout title="Proyectos" description="Una selección de mis últimos trabajos en desarrollo web.">
+    <style>
+        .page-header {
+            text-align: center; 
+            padding: 3rem 1.5rem;
+        }
+        .page-title {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .page-description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .dark .page-title {
+            color: rgb(var(--black));
+        }
+    </style>
+
+    <section class="page-header">
+        <h1 class="page-title">Mis Proyectos</h1>
+        <p class="page-description">
+            Aquí tienes una selección de algunos de los proyectos en los que he trabajado. Cada uno es un reto diferente, enfocado en la calidad, el rendimiento y la experiencia de usuario.
+        </p>
+    </section>
+
+    {/* Usamos el componente de Preact para renderizar los filtros y la cuadrícula */}
+    <FilteredProjects projects={projects} client:load />
+</Layout>

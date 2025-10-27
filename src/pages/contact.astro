@@ -1,0 +1,324 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactForm from '../components/ContactForm.jsx';
+---
+
+<Layout title="Contacto">
+	<style is:global>
+		.page-header {
+			text-align: center;
+			padding: 3rem 1.5rem 0; /* Top padding, no bottom padding as grid follows */
+		}
+
+		.page-title {
+			font-size: 3rem;
+			color: rgb(var(--gray-dark));
+			margin-bottom: 1rem;
+		}
+
+		.page-description {
+			font-size: 1.15rem;
+			color: rgb(var(--gray));
+			margin-bottom: 3rem;
+			max-width: 800px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.contact-main-section {
+			max-width: 1400px; /* Ancho deseado para la cuadrícula de contacto */
+			margin: 0 auto; /* Centrar la sección */
+			padding: 3rem 1.5rem; /* Padding para los lados */
+			animation: fadeInUp 1s ease-out;
+		}
+
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.contact-grid {
+			display: grid;
+			grid-template-columns: 1fr 2fr; /* Adjust as needed, webgae looks like 1/3 and 2/3 */
+			gap: 3rem;
+			margin-bottom: 4rem; /* Space before the map */
+		}
+		
+		@media (max-width: 992px) {
+			.contact-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.contact-main-section {
+				padding: 2rem 1rem;
+			}
+			.contact-info, .form-container {
+				padding: 1.5rem;
+			}
+			.faq-item {
+				padding: 1.5rem;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.page-header {
+				padding: 2rem 1rem 0;
+			}
+			.page-title {
+				font-size: 2.5rem;
+			}
+			.contact-main-section {
+				padding: 1.5rem 1rem;
+			}
+		}
+
+		.contact-info {
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.05) 100%);
+			border-radius: 16px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			padding: 2.5rem;
+			height: fit-content; /* To prevent it from stretching */
+			border: 1px solid rgb(var(--gray-light));
+			animation: slideInLeft 0.8s ease-out;
+		}
+
+		@keyframes slideInLeft {
+			from {
+				opacity: 0;
+				transform: translateX(-30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+
+		.contact-info h2 {
+			font-size: 2rem;
+			color: rgb(var(--gray-dark));
+			margin-bottom: 1.5rem;
+		}
+
+		.contact-details .detail-item {
+			display: flex;
+			align-items: flex-start; /* Align text to top if multiple lines */
+			margin-bottom: 1.5rem;
+			color: rgb(var(--gray));
+			line-height: 1.6;
+		}
+
+		.contact-details .detail-item strong {
+			display: block;
+			color: rgb(var(--gray-dark));
+			margin-bottom: 0.25rem;
+		}
+
+		.contact-details .detail-item a {
+			color: var(--accent);
+			text-decoration: none;
+		}
+
+		.contact-details .detail-item a:hover {
+			text-decoration: underline;
+		}
+
+		.form-container {
+			width: 100%;
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.03) 100%);
+			border-radius: 16px;
+			padding: 2.5rem;
+			position: relative;
+			z-index: 10;
+			border: 1px solid rgb(var(--gray-light));
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			animation: slideInRight 0.8s ease-out 0.2s both;
+		}
+
+		@keyframes slideInRight {
+			from {
+				opacity: 0;
+				transform: translateX(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateX(0);
+			}
+		}
+
+
+
+		.status-message {
+			margin-top: 1.5rem;
+			padding: 1rem;
+			border-radius: 8px;
+			text-align: center;
+			font-weight: 500;
+			animation: slideDown 0.3s ease-out;
+			border: 1px solid transparent;
+		}
+
+		@keyframes slideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-10px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		.status-message.success {
+			background-color: #e6fffa;
+			color: #38a169;
+		}
+
+		.status-message.error {
+			background-color: #fff5f5;
+			color: #c53030;
+		}
+
+
+		.dark .contact-info,
+		.dark .form-container {
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.08) 100%);
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+		.dark input,
+		.dark textarea {
+			background-color: rgb(var(--gray-light));
+		}
+
+
+		.faq-section {
+			padding: 4rem 1.5rem;
+			text-align: center;
+		}
+
+		.faq-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 2rem;
+			margin-top: 2rem;
+		}
+
+		.faq-item {
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.03) 100%);
+			border-radius: 12px;
+			padding: 2rem;
+			border: 1px solid rgb(var(--gray-light));
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+			animation: fadeInUp 0.6s ease-out forwards;
+			opacity: 0;
+		}
+
+		.faq-item:nth-child(1) { animation-delay: 0.1s; }
+		.faq-item:nth-child(2) { animation-delay: 0.2s; }
+		.faq-item:nth-child(3) { animation-delay: 0.3s; }
+		.faq-item:nth-child(4) { animation-delay: 0.4s; }
+
+		.faq-item:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		}
+
+		.faq-item h3 {
+			color: rgb(var(--accent));
+			margin-bottom: 1rem;
+			font-size: 1.2em;
+		}
+
+		.faq-item p {
+			color: rgb(var(--gray));
+			line-height: 1.6;
+		}
+
+		/* Ajuste para que la rejilla de FAQ sea de una columna en móviles */
+		@media (max-width: 768px) {
+			.faq-grid {
+				grid-template-columns: 1fr;
+				gap: 1.5rem;
+			}
+		}
+
+
+		.dark .faq-item {
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.08) 100%);
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+	</style>
+
+	<section class="page-header">
+		<h1 class="page-title">Contacto</h1>
+		<p class="page-description">
+			¿Tienes alguna pregunta, proyecto en mente o simplemente quieres saludar? ¡No dudes en contactarnos! Estamos aquí para ayudarte a hacer realidad tus ideas.
+		</p>
+	</section>
+
+	<section class="contact-main-section">
+		<div class="contact-grid">
+			<div class="contact-info">
+				<h2>Información de Contacto</h2>
+				<div class="contact-details">
+					<div class="detail-item">
+						<div>
+							<strong>Dirección:</strong>
+							<p>24 horas online<br />España</p>
+						</div>
+					</div>
+					<div class="detail-item">
+						<div>
+							<strong>Teléfono:</strong>
+							<p>¿Prefieres hablarlo? Escríbeme primero y concertamos una llamada para analizar tu proyecto sin compromiso.</p>
+						</div>
+					</div>
+					<div class="detail-item">
+						<div>
+							<strong>Email:</strong>
+							<p><a href="mailto:info@webgae.com">info@webgae.com</a></p>
+							<p><a href="mailto:ximosa@gmail.com">ximosa@gmail.com</a></p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-container">
+				<ContactForm client:visible />
+			</div>
+		</div>
+
+
+		<section class="faq-section">
+			<h2>Preguntas Frecuentes</h2>
+			<div class="faq-grid">
+				<div class="faq-item">
+					<h3>¿Cuánto tiempo toma un proyecto web?</h3>
+					<p>El tiempo de desarrollo varía según la complejidad. Un sitio web básico puede tomar 2-4 semanas, mientras que aplicaciones más complejas pueden requerir 2-6 meses.</p>
+				</div>
+				<div class="faq-item">
+					<h3>¿Ofrecen mantenimiento después del lanzamiento?</h3>
+					<p>Sí, ofrezco servicios de mantenimiento y soporte continuo para asegurar que tu sitio web se mantenga actualizado y funcionando correctamente.</p>
+				</div>
+				<div class="faq-item">
+					<h3>¿Trabajan con clientes internacionales?</h3>
+					<p>¡Por supuesto! Trabajo con clientes de todo el mundo. La comunicación se realiza principalmente en español e inglés, y utilizo herramientas como Zoom para reuniones.</p>
+				</div>
+				<div class="faq-item">
+					<h3>¿Cuál es el proceso de trabajo?</h3>
+					<p>Comenzamos con una consulta inicial, luego definimos los requisitos, creo un diseño y presupuesto, desarrollo el proyecto con actualizaciones regulares, y finalmente lanzamos y mantenemos.</p>
+				</div>
+			</div>
+		</section>
+	</section>
+</Layout>

@@ -1,0 +1,89 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+import InteractiveHeader from './InteractiveHeader.jsx';
+
+const { class: className } = Astro.props;
+---
+
+<header class:list={[className]}>
+	<nav>
+		<h2 class="logo">
+			<a href="/">
+				<svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+					<path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+					<path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+				<span>Webgae</span>
+			</a>
+		</h2>
+		<InteractiveHeader client:load>
+			<HeaderLink href="/">Inicio</HeaderLink>
+			<HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href="/about">Sobre mí</HeaderLink>
+			<HeaderLink href="/proyectos">Proyectos</HeaderLink>
+			<HeaderLink href="/contact">Contacto</HeaderLink>
+		</InteractiveHeader>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1.5em; /* Un poco más de padding lateral */
+		box-shadow: 0 2px 8px rgba(var(--black), 5%); /* Esta sombra se aplicará en modo claro */
+
+		/* --- Cambios para el header fijo --- */
+		position: sticky;
+		top: 0;
+		z-index: 50; /* Asegura que esté por encima de otro contenido */
+		width: 100%;
+		/* Usamos la variable --header-bg para un fondo sólido que se adapta al tema */
+		background-color: var(--header-bg);
+	}
+	.logo {
+		margin: 0;
+	}
+	.logo a {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.4rem; /* Aumentamos el tamaño del logo */
+		font-weight: 700;
+		padding: 0.75em 0;
+	}
+	.logo-icon {
+		color: var(--accent);
+	}
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.header-controls {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		border-bottom: 4px solid transparent;
+		font-size: 1rem; /* Reducimos el tamaño de los enlaces del menú */
+		text-decoration: none;
+		transition: border-bottom-color 0.2s ease;
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: var(--accent);
+	}
+	
+</style>

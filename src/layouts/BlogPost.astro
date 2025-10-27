@@ -1,0 +1,216 @@
+---
+import { Image } from 'astro:assets';
+import { SITE_TITLE } from '../consts';
+import Layout from './Layout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TocController from '../components/TocController.jsx';
+import Giscus from '../components/Giscus.astro';
+ 
+interface Post {
+	id: string;
+	title: string;
+	// ... otras propiedades que necesites en ArticleCard
+}
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date | null;
+	relatedPosts?: Post[];
+	slug: string; // Añadimos la prop para el slug
+	heroImage?: string; // Añadimos la prop para la imagen heroica
+}
+
+const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroImage } = Astro.props;
+---
+<script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": title,
+    "description": description,
+    "datePublished": pubDate.toISOString(),
+    "dateModified": updatedDate ? updatedDate.toISOString() : pubDate.toISOString(),
+    "author": {
+        "@type": "Person",
+        "name": "Joaquín",
+        "url": new URL('/', Astro.site).href,
+        "sameAs": [
+            "https://twitter.com/joaquin_dev", // Cambia por tus redes sociales
+            "https://github.com/joaquin-dev"
+        ]
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": SITE_TITLE,
+        "url": Astro.site,
+        "logo": {
+            "@type": "ImageObject",
+            "url": new URL('/favicon.svg', Astro.site).href,
+            "width": 32,
+            "height": 32
+        },
+        "sameAs": [
+            new URL('/', Astro.site).href
+        ]
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": Astro.url.href
+    },
+    "url": Astro.url.href,
+    "image": {
+        "@type": "ImageObject",
+        "url": new URL('/favicon.svg', Astro.site).href,
+        "width": 1200,
+        "height": 630
+    },
+    "articleSection": "Tecnología",
+    "keywords": "desarrollo web, javascript, astro, react, frontend",
+    "wordCount": 1500, // Puedes calcular esto dinámicamente
+    "timeRequired": "PT5M", // Tiempo estimado de lectura
+    "inLanguage": "es-ES",
+    "isPartOf": {
+        "@type": "Blog",
+        "name": SITE_TITLE,
+        "@id": new URL('/', Astro.site).href
+    }
+})} />
+<Layout title={title} description={description}>
+	<style>
+		.hero-image {
+			width: 100%;
+		}
+		.hero-image img {
+			display: block;
+			margin: 0 auto;
+			border-radius: 12px;
+			box-shadow: var(--box-shadow);
+		}
+		.prose {
+			color: rgb(var(--gray-dark));
+		}
+
+		.title {
+			margin-bottom: 1em;
+			padding: 1em 0;
+			text-align: center;
+			line-height: 1;
+		}
+		.title h1 {
+			font-size: 2.5rem; /* Ajuste de tamaño para el título principal */
+			margin: 0 0 0.5em 0;
+		}
+		.date {
+			margin-bottom: 0.5em;
+			color: rgb(var(--gray));
+		}
+		.last-updated-on {
+			font-style: italic;
+		}
+		
+		/* --- Estilos para el efecto de Sidebar --- */
+		#page-wrapper {
+			transition: transform 0.4s ease-in-out;
+		}
+		body.toc-open #page-wrapper {
+			transform: translateX(320px);
+		}
+		body.toc-open #page-wrapper::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.5);
+			z-index: 500;
+		}
+
+		.toc-panel h3 {
+			margin-top: 0;
+			margin-bottom: 1rem;
+			color: rgb(var(--gray-dark));
+		}
+		.dark .toc-panel h3 {
+			color: rgb(var(--black));
+		}
+
+		/* Limitar el ancho del contenido del artículo para mejorar la legibilidad en pantallas grandes */
+		.blog-post-article .wrapper {
+			max-width: 800px;
+		}
+
+
+		/* Estilos para Artículos Relacionados */
+		.related-articles {
+			margin-top: 4rem;
+			padding-top: 2rem;
+			border-top: 1px solid rgb(var(--gray-light));
+		}
+		.related-articles h2 {
+			text-align: center;
+			font-size: 2rem;
+			margin-bottom: 2rem;
+		}
+		.related-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 2rem;
+		}
+		.dark .related-articles {
+			border-top-color: rgb(var(--gray-light));
+		}
+	</style>
+	<article class="blog-post-article">
+		<div class="wrapper">
+			<div class="prose">
+				<Breadcrumbs crumbs={[
+					{ label: 'Inicio', href: '/' },
+					{ label: 'Blog', href: '/blog' },
+					{ label: title }
+				]} />
+				<div class="title">
+					<h1>{title}</h1>
+					<div class="date">
+						<FormattedDate date={pubDate} />
+						{
+							updatedDate && (
+								<div class="last-updated-on">
+									Última actualización: <FormattedDate date={updatedDate} />
+								</div>
+							)
+						}
+					</div>
+					<hr />
+				</div>
+				{heroImage && (
+					<div class="hero-image">
+						<img src={heroImage} alt={`Imagen para ${title}`} />
+					</div>
+				)}
+				<slot />
+			</div>
+
+			{relatedPosts.length > 0 && (
+				<section class="related-articles">
+					<h2>Artículos Relacionados</h2>
+					<div class="related-grid">
+						{relatedPosts.map(p => <ArticleCard post={p} />)}
+					</div>
+				</section>
+			)}
+			<ShareButtons title={title} shareUrl={Astro.url.href} />
+
+			<!-- Nuevo sistema de comentarios con Giscus -->
+			<Giscus />
+
+		</div>
+	</article>
+
+	<!-- Usamos el slot "floating" para que el componente se renderice fuera de #page-wrapper -->
+	<TocController slot="floating" contentSelector=".prose" client:idle />
+
+</Layout>

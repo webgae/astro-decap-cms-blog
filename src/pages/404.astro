@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="404: Página no encontrada">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 4rem 1.5rem;
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+            line-height: 1;
+        }
+        .error-title {
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: rgb(var(--black));
+        }
+        .error-description {
+            font-size: 1.15rem;
+            color: rgb(var(--gray));
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sitemap-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 0 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .sitemap-list a {
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            background-color: rgba(var(--accent), 0.1);
+            color: var(--accent);
+            transition: all 0.2s ease;
+        }
+        .sitemap-list a:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+    </style>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">Página no encontrada</h2>
+        <p class="error-description">
+            Lo sentimos, la página que buscas no existe o ha sido movida.
+            Aquí tienes algunos enlaces para volver al buen camino:
+        </p>
+        <nav>
+            <ul class="sitemap-list">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/proyectos">Proyectos</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/about">Sobre mí</a></li>
+                <li><a href="/contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+</Layout>

@@ -1,0 +1,602 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import profileImage from '../assets/blog-placeholder-about.jpg';
+---
+<Layout title="Sobre mí">
+	<style>
+		/* Contenedor principal más ancho para el contenido de la página */
+		.about-main-section {
+			max-width: 1400px;
+			margin: 0 auto;
+			padding: 5rem 1.5rem;
+			animation: fadeInUp 1s ease-out;
+		}
+
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		.section-container {
+			width: 100%;
+			padding: 3rem 0; /* Ajustado para que el padding lo controle el contenedor principal */
+		}
+
+		.about-content {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			gap: 4rem;
+			align-items: center;
+			margin-bottom: 5rem;
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.05) 100%);
+			padding: 3rem;
+			border-radius: 16px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		}
+
+		.profile-image {
+			text-align: center;
+		}
+
+		.profile-image img {
+			border-radius: 50%;
+			width: 100%;
+			max-width: 250px;
+			aspect-ratio: 1 / 1;
+			object-fit: cover;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+			border: 5px solid white;
+		}
+
+		.experience-section {
+			text-align: center;
+			padding: 4rem 1.5rem;
+		}
+
+		.experience-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 2rem;
+			margin-top: 2rem;
+		}
+
+		.experience-card {
+			background-color: rgb(var(--component-bg));
+			border-radius: 12px;
+			padding: 2rem;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+			border: 1px solid rgb(var(--gray-light));
+			animation: slideInUp 0.6s ease-out forwards;
+			opacity: 0;
+		}
+
+		.experience-card:nth-child(1) { animation-delay: 0.1s; }
+		.experience-card:nth-child(2) { animation-delay: 0.2s; }
+		.experience-card:nth-child(3) { animation-delay: 0.3s; }
+
+		@keyframes slideInUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.experience-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		}
+
+		.experience-card h3 {
+			color: rgb(var(--accent));
+			margin-bottom: 0.5rem;
+		}
+
+		.company {
+			font-weight: 600;
+			color: rgb(var(--gray-dark));
+			margin-bottom: 0.25rem;
+		}
+
+		.period {
+			font-size: 0.9em;
+			color: rgb(var(--gray));
+			margin-bottom: 1rem;
+		}
+
+		.skills-section {
+			text-align: center;
+			padding: 4rem 1.5rem;
+		}
+
+		.skills-grid {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 1rem;
+			margin-top: 2rem;
+		}
+
+		.skill-tag {
+			background-color: rgb(var(--gray-light));
+			color: rgb(var(--gray-dark));
+			padding: 0.5rem 1.25rem;
+			border-radius: 50px;
+			font-weight: 600;
+			font-size: 0.9em;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+		.skill-tag:hover {
+			background-color: rgb(var(--accent));
+			color: white;
+			transform: scale(1.05);
+		}
+
+		.skill-tag {
+			background-color: rgb(var(--gray-light));
+			color: rgb(var(--gray-dark));
+			padding: 0.5rem 1.25rem;
+			border-radius: 50px;
+			font-weight: 600;
+			font-size: 0.9em;
+			transition: all 0.3s ease;
+			cursor: pointer;
+			animation: fadeInScale 0.5s ease-out forwards;
+			opacity: 0;
+		}
+
+		.skill-tag:nth-child(1) { animation-delay: 0.1s; }
+		.skill-tag:nth-child(2) { animation-delay: 0.15s; }
+		.skill-tag:nth-child(3) { animation-delay: 0.2s; }
+		.skill-tag:nth-child(4) { animation-delay: 0.25s; }
+		.skill-tag:nth-child(5) { animation-delay: 0.3s; }
+		.skill-tag:nth-child(6) { animation-delay: 0.35s; }
+		.skill-tag:nth-child(7) { animation-delay: 0.4s; }
+		.skill-tag:nth-child(8) { animation-delay: 0.45s; }
+		.skill-tag:nth-child(9) { animation-delay: 0.5s; }
+
+		@keyframes fadeInScale {
+			from {
+				opacity: 0;
+				transform: scale(0.8);
+			}
+			to {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.about-main-section {
+				padding: 3rem 1rem;
+			}
+			.about-content {
+				grid-template-columns: 1fr;
+				text-align: center;
+				gap: 2rem;
+				padding: 2rem;
+				margin-bottom: 3rem;
+			}
+			.profile-image {
+				margin-bottom: 2rem;
+			}
+			.profile-image img {
+				max-width: 200px;
+			}
+			.experience-grid {
+				grid-template-columns: 1fr;
+				gap: 1.5rem;
+			}
+			.values-grid {
+				grid-template-columns: 1fr;
+				gap: 1.5rem;
+			}
+			.experience-card, .value-card {
+				padding: 1.5rem;
+			}
+			.skills-grid {
+				gap: 0.75rem;
+			}
+			.skill-tag {
+				padding: 0.4rem 1rem;
+				font-size: 0.85em;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.about-main-section {
+				padding: 2rem 1rem;
+			}
+			.about-content {
+				padding: 1.5rem;
+				gap: 1.5rem;
+			}
+			.profile-image img {
+				max-width: 150px;
+			}
+			.experience-card, .value-card {
+				padding: 1.25rem;
+			}
+			.value-icon {
+				font-size: 2rem;
+			}
+			.contact-links {
+				flex-direction: column;
+				align-items: center;
+			}
+			.contact-link {
+				width: 100%;
+				max-width: 250px;
+				justify-content: center;
+			}
+		}
+
+		.dark .skills-section {
+			background-color: rgb(var(--component-bg));
+		}
+
+		.dark .skill-tag {
+			background-color: rgb(var(--component-bg));
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+		.dark .experience-card {
+			background-color: rgb(var(--component-bg));
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+		.values-section {
+			text-align: center;
+			padding: 4rem 1.5rem;
+		}
+
+		.values-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 2rem;
+			margin-top: 2rem;
+		}
+
+		.value-card {
+			background-color: rgb(var(--component-bg));
+			border-radius: 12px;
+			padding: 2rem;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+			border: 1px solid rgb(var(--gray-light));
+			animation: slideInUp 0.6s ease-out forwards;
+			opacity: 0;
+		}
+
+		.value-card:nth-child(1) { animation-delay: 0.1s; }
+		.value-card:nth-child(2) { animation-delay: 0.2s; }
+		.value-card:nth-child(3) { animation-delay: 0.3s; }
+		.value-card:nth-child(4) { animation-delay: 0.4s; }
+
+		.value-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		}
+
+		.value-icon {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.value-card h3 {
+			color: rgb(var(--accent));
+			margin-bottom: 1rem;
+		}
+
+		.dark .about-content {
+			background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.1) 100%);
+		}
+
+		.contact-section {
+			text-align: center;
+			padding: 4rem 1.5rem;
+		}
+
+		.contact-intro {
+			font-size: 1.1em;
+			color: rgb(var(--gray));
+			margin-bottom: 2rem;
+			max-width: 600px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.contact-links {
+			display: flex;
+			justify-content: center;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.contact-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.75rem 1.5rem;
+			background-color: rgb(var(--component-bg));
+			color: rgb(var(--text));
+			text-decoration: none;
+			border-radius: 50px;
+			border: 1px solid rgb(var(--gray-light));
+			transition: all 0.3s ease;
+			font-weight: 500;
+		}
+
+		.contact-link:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			background-color: rgb(var(--accent));
+			color: white;
+		}
+
+		.contact-link.primary {
+			background-color: rgb(var(--accent));
+			color: white;
+		}
+
+		.contact-link.primary:hover {
+			background-color: rgb(var(--accent-dark, var(--accent)));
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(var(--accent), 0.3);
+		}
+
+		.contact-icon {
+			font-size: 1.2em;
+		}
+
+		.dark .value-card {
+			background-color: rgb(var(--component-bg));
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+		.dark .contact-link {
+			background-color: rgb(var(--component-bg));
+			border: 1px solid rgb(var(--gray-light));
+			color: rgb(var(--text));
+		}
+
+		/* Estilos para la nueva sección de expertise */
+		.expertise-section {
+			text-align: center;
+			padding: 4rem 1.5rem;
+		}
+
+		.expertise-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 1.5rem;
+			margin-top: 2rem;
+		}
+
+		.expertise-card {
+			background-color: rgb(var(--component-bg));
+			border-radius: 12px;
+			padding: 1.5rem;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+			border: 1px solid rgb(var(--gray-light));
+			animation: slideInUp 0.6s ease-out forwards;
+			opacity: 0;
+		}
+
+		.expertise-card:nth-child(1) { animation-delay: 0.1s; }
+		.expertise-card:nth-child(2) { animation-delay: 0.2s; }
+		.expertise-card:nth-child(3) { animation-delay: 0.3s; }
+		.expertise-card:nth-child(4) { animation-delay: 0.4s; }
+
+		.expertise-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		}
+
+		.expertise-icon {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+		}
+
+		.expertise-card h3 {
+			color: rgb(var(--accent));
+			margin-bottom: 1rem;
+		}
+
+		.dark .expertise-card {
+			background-color: rgb(var(--component-bg));
+			border: 1px solid rgb(var(--gray-light));
+		}
+
+		@media (max-width: 768px) {
+			.expertise-grid {
+				grid-template-columns: 1fr;
+				gap: 1.5rem;
+			}
+			.expertise-card {
+				padding: 1.5rem;
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.expertise-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (min-width: 1280px) {
+			.expertise-grid {
+				grid-template-columns: repeat(4, 1fr);
+			}
+		}
+	</style>
+	<div class="about-main-section">
+			<div class="about-content">
+				<div class="profile-image">
+					<!-- Cambia esta imagen por una tuya. Debe estar en /public/images/profile.jpg -->
+					<Image src={profileImage} alt="Foto de perfil de Joaquín" width={250} height={250} format="webp" />
+				</div>
+				<div class="bio">
+					<h2>Mi Trayectoria</h2>
+					<p>
+						¡Hola! Soy Joaquín, un desarrollador web apasionado por crear experiencias digitales que no solo funcionen bien, sino que también se sientan intuitivas y atractivas. Mi viaje en el mundo de la programación comenzó con una simple curiosidad y se ha convertido en una carrera dedicada a resolver problemas a través de la tecnología.
+					</p>
+					<p>
+						Me especializo en el desarrollo frontend con tecnologías modernas como Astro, React y Vue, pero también me siento cómodo trabajando en el backend para construir aplicaciones completas y robustas. Creo firmemente en la importancia de un código limpio, un rendimiento optimizado y un diseño centrado en el usuario.
+					</p>
+				</div>
+			</div>
+
+		<section class="experience-section">
+			<h2>Experiencia Profesional</h2>
+			<div class="experience-grid">
+				<div class="experience-card">
+					<h3>Desarrollador Frontend Senior</h3>
+					<p class="company">Empresa Tech Innovadora</p>
+					<p class="period">2022 - Presente</p>
+					<p>Desarrollo de aplicaciones web modernas con Astro, React y TypeScript. Optimización de rendimiento y SEO.</p>
+				</div>
+				<div class="experience-card">
+					<h3>Desarrollador Full Stack</h3>
+					<p class="company">Startup Digital</p>
+					<p class="period">2020 - 2022</p>
+					<p>Creación de soluciones completas desde el frontend hasta el backend, utilizando Node.js y bases de datos.</p>
+				</div>
+				<div class="experience-card">
+					<h3>Desarrollador Web Junior</h3>
+					<p class="company">Agencia de Marketing Digital</p>
+					<p class="period">2019 - 2020</p>
+					<p>Desarrollo de sitios web responsivos y optimización para motores de búsqueda.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="skills-section">
+			<div class="skills-section">
+				<h2>Mis Habilidades</h2>
+				<div class="skills-grid">
+					<span class="skill-tag">Astro</span>
+					<span class="skill-tag">JavaScript</span>
+					<span class="skill-tag">TypeScript</span>
+					<span class="skill-tag">React</span>
+					<span class="skill-tag">Node.js</span>
+					<span class="skill-tag">CSS</span>
+					<span class="skill-tag">SEO</span>
+					<span class="skill-tag">Git</span>
+					<span class="skill-tag">Firebase</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="expertise-section">
+			<h2>Experiencia en CMS y Desarrollo Backend</h2>
+			<div class="expertise-grid">
+				<div class="expertise-card">
+					<div class="expertise-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+					</div>
+					<h3>WordPress Expert</h3>
+					<p>Desarrollo y personalización avanzada de temas y plugins para WordPress. Experiencia en WooCommerce, optimización de rendimiento y migraciones complejas.</p>
+				</div>
+				<div class="expertise-card">
+					<div class="expertise-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+					</div>
+					<h3>PHP Avanzado</h3>
+					<p>Desarrollo backend robusto con PHP, incluyendo frameworks como Laravel y CodeIgniter. APIs RESTful, integración con bases de datos MySQL y PostgreSQL.</p>
+				</div>
+				<div class="expertise-card">
+					<div class="expertise-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+					</div>
+					<h3>Bases de Datos</h3>
+					<p>Diseño y optimización de bases de datos relacionales y no relacionales. Experiencia con MySQL, PostgreSQL, MongoDB y Redis para caching.</p>
+				</div>
+				<div class="expertise-card">
+					<div class="expertise-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"></path><path d="M18.5 6.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"></path><path d="M8.5 18.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"></path><path d="M12 2v4"></path><path d="m4.93 4.93 2.83 2.83"></path><path d="M2 12h4"></path><path d="m4.93 19.07 2.83-2.83"></path><path d="M12 22v-4"></path><path d="m19.07 19.07-2.83-2.83"></path><path d="M22 12h-4"></path><path d="m19.07 4.93-2.83 2.83"></path></svg>
+					</div>
+					<h3>Optimización WPO</h3>
+					<p>Especialista en Web Performance Optimization: compresión, minificación, lazy loading, CDN, y técnicas avanzadas de caching para tiempos de carga ultra-rápidos.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="values-section">
+			<h2>Mis Valores y Filosofía</h2>
+			<div class="values-grid">
+				<div class="value-card">
+					<div class="value-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 2.5a2.5 2.5 0 0 0-3.5 0L8.5 6H5a2 2 0 0 0-2 2v3.5L6.5 15a2.5 2.5 0 0 0 3.5 0l3.5-3.5h3.5a2 2 0 0 0 2-2V5a2.5 2.5 0 0 0-2.5-2.5z"></path><path d="m14.5 6.5 3 3"></path><path d="M2.5 15.5a2.5 2.5 0 0 0 0 3.5L6 22.5h3.5a2 2 0 0 0 2-2v-3.5l-3.5-3.5a2.5 2.5 0 0 0-3.5 0z"></path></svg>
+					</div>
+					<h3>Innovación</h3>
+					<p>Siempre busco nuevas formas de resolver problemas y mejorar la experiencia del usuario.</p>
+				</div>
+				<div class="value-card">
+					<div class="value-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+					</div>
+					<h3>Calidad</h3>
+					<p>Me enfoco en escribir código limpio, eficiente y mantenible que resista el paso del tiempo.</p>
+				</div>
+				<div class="value-card">
+					<div class="value-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+					</div>
+					<h3>Colaboración</h3>
+					<p>Creo en el poder del trabajo en equipo y el aprendizaje continuo de la comunidad.</p>
+				</div>
+				<div class="value-card">
+					<div class="value-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15h18M5.5 15h.01M8 15h.01M11 15h.01M13.5 15h.01M16 15h.01M18.5 15h.01M7 11h10M9.5 11h.01M12 11h.01M14.5 11h.01M9 7h6M11.5 7h.01"></path></svg>
+					</div>
+					<h3>Creatividad</h3>
+					<p>Combino creatividad con tecnología para crear soluciones únicas y atractivas.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="contact-section">
+			<h2>Conectemos</h2>
+			<p class="contact-intro">¿Interesado en trabajar juntos? ¡Hablemos!</p>
+			<div class="contact-links">
+				<a href="/contact" class="contact-link primary">
+					<span class="contact-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+					</span>
+					<span>Contactar</span>
+				</a>
+				<a href="https://github.com/joaquin" target="_blank" rel="noopener" class="contact-link">
+					<span class="contact-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+					</span>
+					<span>GitHub</span>
+				</a>
+				<a href="https://linkedin.com/in/joaquin" target="_blank" rel="noopener" class="contact-link">
+					<span class="contact-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+					</span>
+					<span>LinkedIn</span>
+				</a>
+				<a href="https://twitter.com/joaquin" target="_blank" rel="noopener" class="contact-link">
+					<span class="contact-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+					</span>
+					<span>Twitter</span>
+				</a>
+			</div>
+		</section>
+	</div>
+</Layout>

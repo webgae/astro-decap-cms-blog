@@ -1,0 +1,35 @@
+backend:
+  name: github
+  repo: webgae/astrowp # Reemplaza con tu usuario/repositorio de GitHub
+  branch: main # O la rama que uses (ej. master)
+  base_url: https://api.netlify.com # Necesario para OAuth de GitHub
+  auth_endpoint: auth # Endpoint para autenticación
+
+# Habilitar modo local para desarrollo (solo funciona en local)
+local_backend: true
+
+media_folder: "public/uploads" # Folder where user uploaded files will be stored
+public_folder: "/uploads" # The path used to access the media in the browser
+
+collections:
+  - name: "blog" # Used in routes, e.g., /admin/collections/blog
+    label: "Blog Posts" # Used in the UI
+    folder: "src/content/blog" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
+    fields: # The fields each document in this collection will have
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Publish Date", name: "pubDate", widget: "datetime"}
+      - {label: "Updated Date", name: "updatedDate", widget: "datetime", required: false}
+      - {label: "Hero Image", name: "heroImage", widget: "image", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "pages"
+    label: "Pages"
+    folder: "src/content/pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}

@@ -1,0 +1,17 @@
+{
+  "name": "Webgae - Desarrollo Web Moderno",
+  "short_name": "Webgae",
+  "description": "Desarrollo web moderno y eficaz con las últimas tecnologías",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2337ff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

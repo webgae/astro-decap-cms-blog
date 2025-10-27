@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Política de Privacidad" description="Consulta nuestra política de privacidad para entender cómo manejamos tus datos.">
+    <style>
+        .legal-page { padding-top: 2rem; }
+        .legal-page h1 { text-align: center; margin-bottom: 2rem; }
+        .legal-page h2 { font-size: 1.8rem; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgb(var(--gray-light)); padding-bottom: 0.5rem; }
+        .legal-page p { line-height: 1.8; }
+    </style>
+    <div class="wrapper">
+        <div class="prose legal-page">
+            <h1>Política de Privacidad</h1>
+            <p><strong>Última actualización:</strong> {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+
+            <p>En [Nombre de tu Sitio Web], valoramos tu privacidad y nos comprometemos a proteger tus datos personales. Esta política de privacidad explica cómo recopilamos, usamos y protegemos la información que nos proporcionas.</p>
+
+            <h2>1. Información que Recopilamos</h2>
+            <p>Recopilamos información de las siguientes maneras:</p>
+            <ul>
+                <li><strong>Información que nos proporcionas directamente:</strong> Cuando utilizas nuestro formulario de contacto, recopilamos tu nombre, dirección de correo electrónico y el mensaje que nos envías.</li>
+                <li><strong>Información recopilada automáticamente:</strong> Al igual que la mayoría de los sitios web, podemos utilizar cookies y herramientas de análisis para recopilar información técnica sobre tu visita, como tu dirección IP, tipo de navegador y páginas visitadas. Esta información es anónima y se utiliza para mejorar la experiencia del sitio.</li>
+            </ul>
+
+            <h2>2. Cómo Usamos tu Información</h2>
+            <p>Utilizamos la información recopilada para:</p>
+            <ul>
+                <li>Responder a tus consultas enviadas a través del formulario de contacto.</li>
+                <li>Mejorar y optimizar el funcionamiento y la seguridad de nuestro sitio web.</li>
+                <li>Analizar tendencias de uso para crear contenido más relevante.</li>
+            </ul>
+
+            <h2>3. Cómo Protegemos tu Información</h2>
+            <p>No compartimos, vendemos ni alquilamos tu información personal a terceros. Tomamos medidas razonables para proteger tu información contra el acceso no autorizado o la divulgación.</p>
+
+            <h2>4. Tus Derechos</h2>
+            <p>Tienes derecho a acceder, rectificar o eliminar tus datos personales que poseemos. Si deseas ejercer alguno de estos derechos, por favor, contáctanos a través de nuestro formulario de contacto.</p>
+
+            <h2>5. Cambios en esta Política</h2>
+            <p>Nos reservamos el derecho de modificar esta política de privacidad en cualquier momento. Cualquier cambio será publicado en esta página.</p>
+        </div>
+    </div>
+</Layout>
+

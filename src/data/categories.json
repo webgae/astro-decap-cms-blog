@@ -1,0 +1,52 @@
+[
+  {
+    "id": 273,
+    "name": "blog",
+    "slug": "blog"
+  },
+  {
+    "id": 481,
+    "name": "blogger",
+    "slug": "blogger"
+  },
+  {
+    "id": 339431,
+    "name": "Código",
+    "slug": "codigo"
+  },
+  {
+    "id": 23967426,
+    "name": "Código Wordpress",
+    "slug": "codigo-wordpress"
+  },
+  {
+    "id": 841,
+    "name": "Plugins Wordpress",
+    "slug": "plugins-wordpress"
+  },
+  {
+    "id": 14308,
+    "name": "Recursos",
+    "slug": "recursos"
+  },
+  {
+    "id": 1958,
+    "name": "SEO",
+    "slug": "seo"
+  },
+  {
+    "id": 1771,
+    "name": "Sin categoría",
+    "slug": "sin-categoria"
+  },
+  {
+    "id": 29697,
+    "name": "Temas WordPress",
+    "slug": "temas-wordpress"
+  },
+  {
+    "id": 82323862,
+    "name": "velocidad web",
+    "slug": "velocidad-web"
+  }
+]

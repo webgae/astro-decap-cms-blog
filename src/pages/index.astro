@@ -1,0 +1,395 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import FeatureCard from '../components/FeatureCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import FaqAccordion from '../components/FaqAccordion.jsx';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+const initialPosts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+
+
+const faqItems = [
+	{
+		question: '¿Qué tecnologías utilizas principalmente?',
+		answer: 'Me especializo en el ecosistema de JavaScript, utilizando frameworks modernos como Astro, Next.js y SvelteKit para el frontend. Para el backend, tengo experiencia con Node.js y también soy experto en soluciones CMS como WordPress y desarrollo con PHP.'
+	},
+	{
+		question: '¿Cómo enfocas la optimización de rendimiento (WPO)?',
+		answer: 'Mi filosofía es "enviar menos JavaScript". Utilizo arquitecturas como las Islas de Astro para asegurar que solo el código interactivo se cargue en el cliente. Además, optimizo imágenes, utilizo carga diferida (lazy loading) y configuro cachés para garantizar tiempos de carga ultra-rápidos.'
+	},
+	{
+		question: '¿Trabajas con SEO en mente?',
+		answer: 'Absolutamente. El SEO técnico es una parte fundamental de mi proceso. Me aseguro de que cada sitio tenga una estructura semántica correcta, metaetiquetas optimizadas, sitemaps, y sea totalmente rastreable por los motores de búsqueda para maximizar la visibilidad orgánica.'
+	},
+	{
+		question: '¿Cuál es tu proceso para iniciar un nuevo proyecto?',
+		answer: 'Todo comienza con una conversación para entender a fondo tus objetivos. A partir de ahí, definimos el alcance, creamos un prototipo o wireframe, y luego pasamos al desarrollo. Mantengo una comunicación constante durante todo el proceso para asegurar que el resultado final supere tus expectativas.'
+	}
+];
+
+// Structured Data para la página principal
+const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Webgae",
+    "url": "https://webgae.com",
+    "logo": "https://webgae.com/favicon.svg",
+    "description": SITE_DESCRIPTION,
+    "founder": {
+        "@type": "Person",
+        "name": "Joaquín"
+    },
+    "sameAs": [
+        "https://twitter.com/webgae_dev",
+        "https://github.com/webgae"
+    ],
+    "serviceType": "Desarrollo Web",
+    "areaServed": "Global",
+    "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Servicios de Desarrollo Web",
+        "itemListElement": [
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "Sitios Web Ultra-Rápidos",
+                    "description": "Optimización completa para máxima velocidad"
+                }
+            },
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "SEO Integrado",
+                    "description": "Optimización para motores de búsqueda desde el inicio"
+                }
+            },
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "Diseño Adaptable",
+                    "description": "Experiencia perfecta en todos los dispositivos"
+                }
+            }
+        ]
+    }
+};
+---
+
+<Layout title={SITE_TITLE} description={SITE_DESCRIPTION} isHomePage={true}>
+	<style is:global>
+		/* Estilos para el header en la página de inicio */
+		header.home-header {
+			/* Degradado horizontal inspirado en la imagen, con un brillo sutil en el centro */
+			background: linear-gradient(to right, #04284d, #0B0F19, #052f58);
+			box-shadow: none !important; /* Quitamos la sombra para que se fusione */
+		}
+
+		/* Ajustamos el color de los enlaces para que sean visibles en el fondo oscuro */
+		header.home-header nav a {
+			color: rgba(255, 255, 255, 0.9);
+		}
+		header.home-header nav a:hover,
+		header.home-header nav a.active {
+			color: white;
+		}
+
+		/* Hacemos lo mismo para los iconos del header interactivo */
+		header.home-header .theme-toggle button,
+		header.home-header .mobile-menu-toggle {
+			color: rgba(255, 255, 255, 0.849);
+		}
+
+		/* Estilo para el icono del logo en el header de la página de inicio */
+		header.home-header .logo-icon {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		/* Cuando el menú móvil está abierto en la página de inicio,
+		   el fondo es claro, por lo que el botón de cierre (X) debe ser oscuro. */
+		header.home-header .mobile-menu-toggle.is-active {
+			color: var(--text-secondary); /* Usamos un color oscuro del tema */
+		}
+
+		/* Estilo para el fondo degradado de la sección de testimonios */
+		.testimonials-gradient-bg {
+			background: linear-gradient(to bottom, rgb(238, 237, 245), #f0f4f8);
+		}
+
+		/* Estilo para el fondo degradado de la sección de servicios */
+		.services-gradient-bg {
+			background: linear-gradient(to bottom, #e4e5eb, white);
+		}
+
+		/* Estilo para el fondo degradado de la sección de FAQ */
+		.faq-gradient-bg {
+			background: linear-gradient(to right, #dbdee0, white, #cfd2d4);
+		}
+
+		/* Estilo para el fondo degradado de la sección de Últimos Artículos */
+		.latest-articles-gradient-bg {
+			background: linear-gradient(to right, rgb(170, 166, 166), #f0f4f8, rgb(184, 179, 179));
+		}
+
+		/* Estilo para el icono del cohete en el párrafo de bienvenida */
+		.hero-icon {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 0.5rem;
+			transform: translateY(-2px);
+		}
+	</style>
+	<style>
+		.section-container {
+			width: 100%;
+			padding: 3rem 1.5rem;
+		}
+		.section-alt-bg {
+			background-color: rgb(var(--card-bg));
+		}
+		.dark .section-alt-bg {
+			background-color: rgb(var(--component-bg));
+		}
+
+		/* Nueva clase para fondo degradado suave */
+		.section-gradient-bg {
+			background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #3a3a3a 100%);
+			color: white;
+		}
+		.dark .section-gradient-bg {
+			background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
+			color: rgb(var(--black));
+		}
+
+		/* Nueva clase para fondo claro */
+		.section-light-bg {
+			background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+		}
+		.dark .section-light-bg {
+			background: linear-gradient(135deg, #374151 0%, #4b5563 50%, #6b7280 100%);
+			color: rgb(var(--black));
+		}
+		.section-title {
+			text-align: center;
+			font-size: 2.5rem;
+			margin-bottom: 2rem;
+		}
+		.features-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 2rem;
+		}
+		main {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		/* Hero Section - Responsive Typography Mejorada */
+		.home-welcome-section main {
+			text-align: center;
+			max-width: 1200px;
+			padding: clamp(4rem, 10vh, 8rem) 2rem;
+			animation: fadeInUp 1s ease-out;
+		}
+
+		.home-welcome-section h1 {
+			font-size: clamp(2rem, 5vw, 4rem);
+			font-weight: 800;
+			line-height: 1.1;
+			margin-bottom: 1rem;
+			letter-spacing: -0.02em;
+		}
+
+		.home-welcome-section h2 {
+			font-size: clamp(1.25rem, 3vw, 2rem);
+			font-weight: 600;
+			margin-bottom: 1.5rem;
+			opacity: 0.9;
+		}
+
+		.home-welcome-section p {
+			font-size: clamp(1rem, 2.5vw, 1.25rem);
+			max-width: 600px;
+			line-height: 1.6;
+			margin: 0 auto 2.5rem;
+		}
+
+		.cta-buttons {
+			display: flex;
+			gap: 1rem;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-top: 2rem;
+		}
+
+		/* Highlight effect con gradiente animado */
+		.highlight {
+			background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+			background-size: 200% 200%;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			animation: gradientShift 3s ease infinite;
+		}
+
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes gradientShift {
+			0%, 100% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+		}
+
+		/* Breakpoints específicos para mejor control responsive */
+		@media (max-width: 640px) {
+			.home-welcome-section main {
+				padding: 3rem 1rem;
+			}
+			.home-welcome-section h1 {
+				font-size: 2.5rem;
+			}
+			.home-welcome-section h2 {
+				font-size: 1.5rem;
+			}
+			.home-welcome-section p {
+				font-size: 1.1rem;
+			}
+			.cta-buttons {
+				flex-direction: column;
+				align-items: center;
+			}
+			.cta-buttons .btn {
+				width: 100%;
+				max-width: 280px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.home-welcome-section h1 {
+				font-size: 2rem;
+			}
+			.home-welcome-section h2 {
+				font-size: 1.25rem;
+			}
+			.home-welcome-section p {
+				font-size: 1rem;
+			}
+		}
+
+		@media (min-width: 769px) {
+			.home-welcome-section h1 {
+				font-size: 3.5rem;
+			}
+		}
+
+		@media (min-width: 1025px) {
+			.home-welcome-section h1 {
+				font-size: 4rem;
+			}
+		}
+
+	</style>
+	
+	<section class="home-welcome-section" style={`background-image: linear-gradient(to right, rgba(4, 40, 77, 0.7), rgba(11, 15, 25, 0.8), rgba(5, 47, 88, 0.7)), url(/ens.jpg); background-size: cover; background-position: center; background-repeat: no-repeat;`}>
+		<main>
+			<h1>
+				Desarrollo Web<br>
+				<span class="highlight">Ultra-Rápido</span> & Optimizado
+			</h1>
+			<h2>
+				Especialista WordPress & Tecnologías Modernas
+			</h2>
+			<p>
+				<span class="hero-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.2 18.2L10 22l4.8-3.8L19.6 12 12 4.4 4.4 12l.8 6.2zM12 4.4V12m0 0l-3.8 4.8M12 12l3.8 4.8"/></svg>
+				</span>
+				<strong>Resultados probados:</strong> Sitios que cargan en <em>menos de 2 segundos</em>, posicionamiento SEO superior y conversiones hasta un <em>300% más altas</em>.
+			</p>
+			<div class="cta-buttons">
+				<a href="/proyectos" class="btn btn-primary">Ver Proyectos</a>
+				<a href="/contact" class="btn btn-secondary">Contáctame</a>
+			</div>
+		</main>
+	</section>
+
+	<section id="features" class="section-container services-gradient-bg">
+		<main>
+			<h2 class="section-title">Nuestros Servicios</h2>
+			<div class="features-grid">
+				<FeatureCard
+					title="Sitios Ultra-Rápidos"
+					description="Optimizamos cada aspecto de tu web para que cargue a la velocidad de la luz, mejorando la experiencia y el ranking en buscadores."
+				>
+					<svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.21 14.77a.5.5 0 0 1 .59.04l.81.81a.5.5 0 0 0 .7.07l4.24-4.24a.5.5 0 0 0 .07-.7l-.81-.81a.5.5 0 0 1 .04-.59l1.42-2.13a.5.5 0 0 1 .62-.21l2.13 1.42a.5.5 0 0 1 .21.62l-2.13 3.55a.5.5 0 0 1-.59.21l-3.55-2.13a.5.5 0 0 1-.21-.59l2.13-3.55a.5.5 0 0 1 .59-.21l3.55 2.13a.5.5 0 0 1 .21.59l-1.42 2.13a.5.5 0 0 1-.21.62l-2.13-1.42a.5.5 0 0 1-.62-.21L12 7.21l-2.13 1.42a.5.5 0 0 1-.62.21l-1.42-2.13a.5.5 0 0 1 .21-.62l3.55-2.13a.5.5 0 0 1 .59.21l2.13 3.55a.5.5 0 0 1-.21.59l-3.55 2.13a.5.5 0 0 1-.59-.21l-2.13-3.55a.5.5 0 0 1 .21-.62l1.42-2.13a.5.5 0 0 1 .59-.04l.81.81a.5.5 0 0 0 .7.07l4.24-4.24a.5.5 0 0 0 .07-.7l-.81-.81a.5.5 0 0 1 .04-.59l1.42-2.13a.5.5 0 0 1 .62-.21l2.13 1.42a.5.5 0 0 1 .21.62l-2.13 3.55a.5.5 0 0 1-.59.21l-3.55-2.13a.5.5 0 0 1-.21-.59l2.13-3.55a.5.5 0 0 1 .59-.21l3.55 2.13a.5.5 0 0 1 .21.59l-1.42 2.13a.5.5 0 0 1-.21.62l-2.13-1.42a.5.5 0 0 1-.62-.21L12 7.21l-2.13 1.42a.5.5 0 0 1-.62.21l-1.42-2.13a.5.5 0 0 1 .21-.62l3.55-2.13a.5.5 0 0 1 .59.21l2.13 3.55a.5.5 0 0 1-.21.59l-3.55 2.13a.5.5 0 0 1-.59-.21l-2.13-3.55a.5.5 0 0 1 .21-.62l1.42-2.13a.5.5 0 0 1 .59-.04l.81.81a.5.5 0 0 0 .7.07l4.24-4.24a.5.5 0 0 0 .07-.7l-.81-.81a.5.5 0 0 1 .04-.59l1.42-2.13a.5.5 0 0 1 .62-.21l2.13 1.42a.5.5 0 0 1 .21.62l-2.13 3.55a.5.5 0 0 1-.59.21l-3.55-2.13a.5.5 0 0 1-.21-.59l2.13-3.55a.5.5 0 0 1 .59-.21l3.55 2.13a.5.5 0 0 1 .21.59l-1.42 2.13a.5.5 0 0 1-.21.62l-2.13-1.42a.5.5 0 0 1-.62-.21L12 7.21l-2.13 1.42a.5.5 0 0 1-.62.21l-1.42-2.13a.5.5 0 0 1 .21-.62l3.55-2.13a.5.5 0 0 1 .59.21l2.13 3.55a.5.5 0 0 1-.21.59l-3.55 2.13a.5.5 0 0 1-.59-.21l-2.13-3.55a.5.5 0 0 1 .21-.62l1.42-2.13a.5.5 0 0 1 .59-.04l.81.81a.5.5 0 0 0 .7.07l4.24-4.24a.5.5 0 0 0 .07-.7l-.81-.81a.5.5 0 0 1 .04-.59l1.42-2.13a.5.5 0 0 1 .62-.21l2.13 1.42a.5.5 0 0 1 .21.62zM2 22l1-1h1.5l1-1h1.5l1-1h1.5l1-1h1.5l1-1h1.5l1-1h1.5l1-1h1.5l-1.5-1.5h-1.5l-1-1h-1.5l-1-1h-1.5l-1-1h-1.5l-1-1h-1.5l-1-1h-1.5L2 9.5l-1.5 1.5v1.5l1 1v1.5l1 1v1.5l1 1v1.5z"/></svg>
+				</FeatureCard>
+				<FeatureCard
+					title="SEO Integrado"
+					description="Construimos sitios con las mejores prácticas de SEO desde la base para asegurar la máxima visibilidad en Google y otros buscadores."
+				>
+					<svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+				</FeatureCard>
+				<FeatureCard
+					title="Diseño Adaptable"
+					description="Tu web se verá y funcionará perfectamente en cualquier dispositivo, desde móviles y tabletas hasta ordenadores de escritorio."
+				>
+					<svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+				</FeatureCard>
+			</div>
+		</main>
+	</section>
+
+	<section id="testimonials" class="section-container testimonials-gradient-bg">
+		<main>
+			<h2 class="section-title">Lo que dicen mis clientes</h2>
+			<div class="features-grid">
+				<TestimonialCard
+					quote="El rendimiento del nuevo sitio es increíble. Hemos visto un aumento significativo en el tráfico orgánico y la retención de usuarios."
+					author="Ana García"
+					company="CEO de TechSolutions"
+				/>
+				<TestimonialCard
+					quote="Un profesional excepcional. Entendió nuestras necesidades a la perfección y entregó un producto final que superó nuestras expectativas."
+						author="Carlos Pérez"
+						company="Director de Marketing en InnovateCo"
+				/>
+				<TestimonialCard
+					quote="El diseño es limpio, moderno y, lo más importante, funciona de maravilla en móviles. ¡Totalmente recomendado!"
+					author="Laura Martínez"
+					company="Fundadora de Creative Minds"
+				/>
+			</div>
+		</main>
+	</section>
+
+	<section id="faq" class="section-container faq-gradient-bg">
+		<main>
+			<h2 class="section-title">Preguntas Frecuentes</h2>
+			<FaqAccordion items={faqItems} client:visible />
+		</main>
+	</section>
+
+	<section id="latest-articles" class="section-container latest-articles-gradient-bg">
+		<main>
+			<h2 class="section-title">Últimos Artículos</h2>
+			<div class="features-grid">
+				{initialPosts.map((entry) => (
+					<ArticleCard entry={entry} />
+				))}
+			</div>
+		</main>
+	</section>
+</Layout>

@@ -1,0 +1,21 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import { Image } from 'astro:assets';
+
+const { entry } = Astro.props;
+const heroImage = entry.data.heroImage;
+---
+
+<a href={`/blog/${entry.slug}/`} class="article-card">
+    <div class="article-content">
+        {heroImage && (
+            <div class="post-image-container">
+                <Image class="post-image" width={50} height={50} src={heroImage} alt={`Imagen para ${entry.data.title}`} />
+            </div>
+        )}
+        <div class="post-text">
+            <h4 class="title">{entry.data.title}</h4>
+            <p class="date"><FormattedDate date={entry.data.pubDate} /></p>
+        </div>
+    </div>
+</a>

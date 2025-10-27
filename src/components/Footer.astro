@@ -1,0 +1,482 @@
+---
+---
+
+<footer>
+	<div class="footer-container">
+		<!-- Sección de Navegación -->
+		<div class="footer-section">
+			<div class="section-header">
+				<h3 class="footer-title">Navegación</h3>
+			</div>
+			<ul class="footer-links">
+				<li><a href="/">Inicio</a></li>
+				<li><a href="/about">Sobre mí</a></li>
+				<li><a href="/contact">Contacto</a></li>
+				<li><a href="/proyectos">Proyectos</a></li>
+			</ul>
+		</div>
+
+		<!-- Sección Legal -->
+		<div class="footer-section">
+			<div class="section-header">
+				<h3 class="footer-title">Legal</h3>
+			</div>
+			<ul class="footer-links">
+				<li><a href="/legal/politica-de-privacidad/">Política de Privacidad</a></li>
+				<li><a href="/legal/terminos-de-servicio/">Términos de Servicio</a></li>
+			</ul>
+		</div>
+
+		<!-- Sección Servicios -->
+		<div class="footer-section">
+			<div class="section-header">
+				<h3 class="footer-title">Servicios</h3>
+			</div>
+			<ul class="footer-links">
+				<li><a href="/contact">Consultoría Web</a></li>
+				<li><a href="/contact">Desarrollo Frontend</a></li>
+				<li><a href="/contact">Optimización SEO</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="footer-bottom">
+		<div class="newsletter">
+			<h4>¿Quieres estar al día?</h4>
+			<p>Suscríbete para recibir las últimas actualizaciones y consejos sobre desarrollo web.</p>
+			<form class="newsletter-form" id="newsletter-form">
+				<input type="email" name="email" placeholder="Tu email..." class="newsletter-input" required>
+				<button type="submit" class="newsletter-btn">Suscribirse</button>
+			</form>
+			<div id="newsletter-message" class="newsletter-message"></div>
+		</div>
+		<div class="copyright">
+			<p>© {new Date().getFullYear()} Joaquín. Todos los derechos reservados.</p>
+		</div>
+	</div>
+</footer>
+<style>
+	footer {
+		padding: 4rem 1.5rem 0;
+		background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+		border-top: 1px solid rgb(var(--gray-light));
+		animation: fadeInUp 0.6s ease-out; /* Animación de entrada más rápida */
+		color: white;
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.footer-container {
+		max-width: 1280px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 3rem;
+		margin-bottom: 3rem;
+	}
+
+	.footer-section {
+		padding: 2rem;
+		transition: all 0.3s ease;
+		animation: slideInUp 0.5s ease-out forwards; /* Animación más rápida y suave */
+		opacity: 0;
+	}
+
+	.footer-section:nth-child(1) { animation-delay: 0.1s; }
+	.footer-section:nth-child(2) { animation-delay: 0.2s; }
+	.footer-section:nth-child(3) { animation-delay: 0.3s; }
+	.footer-section:nth-child(4) { animation-delay: 0.4s; }
+
+	@keyframes slideInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.footer-section:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.footer-title {
+		font-size: 1.25rem;
+		font-weight: bold;
+		color: white;
+		margin: 0;
+	}
+
+	.footer-links {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.footer-links li {
+		margin-bottom: 0.75rem;
+	}
+
+	.footer-links a {
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		transition: all 0.3s ease;
+		display: inline-block;
+		position: relative;
+	}
+
+	.footer-links a::before {
+		content: '';
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 0;
+		height: 2px;
+		background-color: rgb(var(--accent));
+		transition: width 0.3s ease;
+	}
+
+	.footer-links a:hover {
+		color: rgb(var(--accent));
+		transform: translateX(5px);
+	}
+
+	.footer-links a:hover::before {
+		width: 100%;
+	}
+
+	.social-links {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.social-link {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		background-color: rgb(var(--component-bg));
+		color: rgb(var(--text));
+		text-decoration: none;
+		border-radius: 8px;
+		border: 1px solid rgb(var(--gray-light));
+		transition: all 0.3s ease;
+		font-weight: 500;
+	}
+
+	.social-link:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		background-color: rgb(var(--accent));
+		color: white;
+	}
+
+	.social-icon {
+		font-size: 1.2rem;
+	}
+
+	.footer-bottom {
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem;
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 2rem;
+		align-items: start;
+	}
+
+	.newsletter h4 {
+		color: white;
+		margin-bottom: 0.5rem;
+		font-size: 1.1rem;
+	}
+
+	.newsletter p {
+		color: rgba(255, 255, 255, 0.8);
+		margin-bottom: 1.5rem;
+		line-height: 1.6;
+	}
+
+	.newsletter-form {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.newsletter-input {
+		flex: 1;
+		padding: 0.75rem 1rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		background-color: rgb(var(--component-bg));
+		color: rgb(var(--text));
+		font-size: 0.9rem;
+		transition: all 0.3s ease;
+	}
+
+	.newsletter-input:focus {
+		outline: none;
+		border-color: rgb(var(--accent));
+		box-shadow: 0 0 0 3px rgba(var(--accent), 0.1);
+	}
+
+	.newsletter-btn {
+		padding: 0.75rem 1.5rem;
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		white-space: nowrap;
+	}
+
+	.newsletter-btn:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(var(--accent), 0.3);
+	}
+
+	.copyright {
+		text-align: right;
+	}
+
+	.copyright p {
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 0.9em;
+		margin-bottom: 0.5rem;
+	}
+
+	.dark .footer-section {
+		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.05) 100%);
+	}
+
+	.dark .social-link {
+		background-color: rgb(var(--component-bg));
+	}
+
+	.dark .newsletter-input {
+		background-color: rgb(var(--gray-light));
+	}
+
+	/* Estilos para el desplegable de páginas */
+	.pages-dropdown {
+		position: relative;
+	}
+
+	.dropdown-toggle {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		color: white;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 0.9rem;
+		font-weight: 500;
+		transition: all 0.3s ease;
+	}
+
+	.dropdown-toggle:hover {
+		background: rgba(255, 255, 255, 0.15);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.dropdown-arrow {
+		transition: transform 0.3s ease;
+		font-size: 0.8rem;
+	}
+
+	.dropdown-toggle.active .dropdown-arrow {
+		transform: rotate(180deg);
+	}
+
+	.dropdown-content {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.4s ease;
+		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.02) 100%);
+		border-radius: 8px;
+		margin-top: 0.5rem;
+		border: 1px solid rgb(var(--gray-light));
+	}
+
+	.dropdown-content.open {
+		max-height: 300px;
+		padding: 1rem;
+		overflow-y: auto;
+	}
+
+	.dropdown-content li {
+		margin-bottom: 0.5rem;
+	}
+
+	.dropdown-content li:last-child {
+		margin-bottom: 0;
+	}
+
+	.dark .dropdown-toggle {
+		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.08) 100%);
+		color: rgb(var(--text));
+	}
+
+	.dark .dropdown-content {
+		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.05) 100%);
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.footer-container {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.footer-section {
+			padding: 1.5rem;
+		}
+
+		.footer-bottom {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			text-align: center;
+		}
+
+		.copyright {
+			text-align: center;
+		}
+
+		.newsletter-form {
+			flex-direction: column;
+		}
+
+		.newsletter-btn {
+			width: 100%;
+		}
+	}
+
+	.newsletter-message {
+		margin-top: 1rem;
+		padding: 0.75rem;
+		border-radius: 8px;
+		text-align: center;
+		font-weight: 500;
+		display: none;
+		animation: slideDown 0.3s ease-out;
+	}
+
+	@keyframes slideDown {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.newsletter-message.success {
+		background-color: #e6fffa;
+		color: #38a169;
+		border: 1px solid #9ae6b4;
+	}
+
+	.newsletter-message.error {
+		background-color: #fff5f5;
+		color: #c53030;
+		border: 1px solid #feb2b2;
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		// Newsletter form functionality
+		const form = document.getElementById('newsletter-form');
+		const messageDiv = document.getElementById('newsletter-message');
+
+		if (form && messageDiv) {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+
+				const formData = new FormData(form);
+				const email = formData.get('email');
+
+				if (!email) {
+					showMessage('Por favor, introduce un email válido.', 'error');
+					return;
+				}
+
+				try {
+					const response = await fetch('/api/newsletter', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ email }),
+					});
+
+					const data = await response.json();
+
+					if (response.ok) {
+						showMessage('¡Gracias por suscribirte! Recibirás nuestras actualizaciones pronto.', 'success');
+						form.reset();
+					} else {
+						showMessage(data.message || 'Error al procesar la suscripción.', 'error');
+					}
+				} catch (error) {
+					console.error('Error:', error);
+					showMessage('Error de conexión. Inténtalo de nuevo.', 'error');
+				}
+			});
+		}
+
+		function showMessage(message, type) {
+			messageDiv.textContent = message;
+			messageDiv.className = `newsletter-message ${type}`;
+			messageDiv.style.display = 'block';
+
+			setTimeout(() => {
+				messageDiv.style.display = 'none';
+			}, 5000);
+		}
+
+		// Dropdown functionality for pages
+		const dropdownToggle = document.getElementById('pages-toggle');
+		const dropdownContent = document.getElementById('pages-list');
+
+		if (dropdownToggle && dropdownContent) {
+			dropdownToggle.addEventListener('click', () => {
+				const isOpen = dropdownContent.classList.contains('open');
+				dropdownToggle.classList.toggle('active');
+
+				if (isOpen) {
+					dropdownContent.classList.remove('open');
+				} else {
+					dropdownContent.classList.add('open');
+				}
+			});
+		}
+	});
+</script>

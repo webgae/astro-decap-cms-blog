@@ -1,0 +1,55 @@
+---
+// src/pages/page/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const pageEntries = await getCollection('pages');
+    if (pageEntries.length === 0) {
+        return [{ params: { slug: '404' }, props: { entry: undefined } }];
+    }
+    return pageEntries.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+// 2. Obtenemos la página específica para esta ruta
+const { entry } = Astro.props;
+
+// Si no se encuentra ninguna entrada (por ejemplo, aún no hay archivos de contenido), redirige a 404
+if (!entry) {
+    return Astro.redirect('/404');
+}
+
+const { title } = entry.data;
+const { Content } = await entry.render();
+
+// Generar una descripción a partir del contenido (opcional, si se necesita)
+const description = title; // Usar el título como descripción por simplicidad, o añadir un campo 'description' al frontmatter de las páginas.
+---
+
+<Layout title={title || 'Página'} description={description}>
+    <style>
+        .page-content {
+            padding-top: 2rem;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+    </style>
+    <div class="page-wrapper">
+        <h1 class="page-title">{title || 'Página'}</h1>
+        <div class="prose page-content">
+            <Content />
+        </div>
+    </div>
+</Layout>

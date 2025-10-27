@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets';
+const { img, title, description, tags, url } = Astro.props;
+---
+
+<a href={url} target="_blank" rel="noopener noreferrer" class="project-card">
+    <Image src={img} alt={`Imagen del proyecto ${title}`} class="card-image" format="webp" width={400} height={220} />
+    <div class="card-content">
+        <h3 class="card-title">{title}</h3>
+        <p class="card-description">{description}</p>
+        <div class="tags">
+            {tags.map(tag => (
+                <span class="tag">{tag}</span>
+            ))}
+        </div>
+    </div>
+</a>
