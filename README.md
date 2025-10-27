@@ -4,6 +4,7 @@
 npm install
 npm run dev
 npm-run-all
+
 ```
 
 Un sitio web moderno construido con Astro que integra contenido desde Blogger, optimizado para rendimiento y SEO. Especializado en desarrollo web moderno con WordPress y soluciones personalizadas.
