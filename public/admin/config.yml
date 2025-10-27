@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: webgae/astrowp # Reemplaza con tu usuario/repositorio de GitHub
+  repo: webgae/astro-decap-cms-blog # Reemplaza con tu usuario/repositorio de GitHub
   branch: main # O la rama que uses (ej. master)
   base_url: https://api.netlify.com # Necesario para OAuth de GitHub
   auth_endpoint: auth # Endpoint para autenticación
