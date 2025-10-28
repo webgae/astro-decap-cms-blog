@@ -1,5 +1,5 @@
 ---
-title: Política de Privacidad
+title: Politica de Privacidad
 ---
 Claro que sí. La creación de una Política de Privacidad es un **requisito legal obligatorio** para cualquier sitio web que recoja datos personales (como un simple correo electrónico).
 
