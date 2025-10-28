@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const pageEntries = await getCollection('pages');
+    return pageEntries.map(entry => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { title } = entry.data;
+---
+
+<Layout title={title} description={title}>
+    <main class="prose">
+        <h1>{title}</h1>
+        <Fragment set:html={entry.rendered.html} />
+    </main>
+</Layout>
+
+<style>
+    .prose {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+</style>

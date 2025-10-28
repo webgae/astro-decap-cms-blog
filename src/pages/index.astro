@@ -4,7 +4,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import FeatureCard from '../components/FeatureCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import FaqAccordion from '../components/FaqAccordion.jsx';
-import ArticleCard from '../components/ArticleCard.astro';
+import RecentArticleListItem from '../components/RecentArticleListItem.astro';
 import { getCollection } from 'astro:content';
 
 const initialPosts = (await getCollection('blog')).sort(
@@ -385,11 +385,15 @@ const structuredData = {
 	<section id="latest-articles" class="section-container latest-articles-gradient-bg">
 		<main>
 			<h2 class="section-title">Últimos Artículos</h2>
-			<div class="features-grid">
-				{initialPosts.map((entry) => (
-					<ArticleCard entry={entry} />
-				))}
-			</div>
+			<ul class="recent-articles-list">
+				{initialPosts.map((entry) => {
+					const postSlug = entry.slug || entry.id.replace(/\.(md|mdx)$/, '');
+					if (!postSlug) return null;
+					return (
+						<RecentArticleListItem post={{ ...entry, slug: postSlug }} />
+					);
+				})}
+			</ul>
 		</main>
 	</section>
 </Layout>
