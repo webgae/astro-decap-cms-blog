@@ -1,5 +1,5 @@
 ---
-title: Términos de Servicios
+title: Terminos de Servicios
 ---
 Este documento es diferente a la Política de Privacidad, ya que define:
 
