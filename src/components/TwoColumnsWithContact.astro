@@ -1,0 +1,94 @@
+---
+interface Props {
+  title?: string;
+  buttonText?: string;
+  buttonLink?: string;
+}
+
+const { title, buttonText = "Contáctame", buttonLink = "/contact" } = Astro.props;
+---
+
+<section class="two-columns-section">
+  {title && <h2 class="section-title">{title}</h2>}
+  <div class="two-columns-grid">
+    <div class="column">
+      <slot name="left" />
+    </div>
+    <div class="column">
+      <slot name="right" />
+    </div>
+  </div>
+  <div class="contact-button-container">
+    <a href={buttonLink} class="btn btn-primary">{buttonText}</a>
+  </div>
+</section>
+
+<style>
+  .two-columns-section {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-top: 1px solid var(--gray-light);
+    border-bottom: 1px solid var(--gray-light);
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+  }
+
+  .two-columns-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .two-columns-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .column {
+    padding: 1rem;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+  }
+
+  .contact-button-container {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(var(--accent), 0.3);
+  }
+
+  /* Dark mode adjustments */
+  .dark .section-title {
+    color: var(--text-color-dark);
+  }
+
+  .dark .column {
+    background-color: var(--component-bg);
+    box-shadow: var(--box-shadow-dark);
+  }
+</style>
