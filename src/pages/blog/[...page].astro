@@ -43,8 +43,8 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 
 			/* --- Contenedor de filtros --- */
 			.filters-container {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
+				display: flex; /* Changed to flex */
+				justify-content: center; /* Centered */
 				gap: 2rem;
 				margin-bottom: 3rem;
 			}
@@ -227,17 +227,10 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 		<main>
 			<div class="blog-container">
 				<div class="filters-container">
-					<div class="filter-widget">
-						<h3>Buscar</h3>
-						<input type="search" id="search-input" placeholder="Buscar artículos..." />
-					</div>
-					<div class="filter-widget">
-						<h3>Categorías</h3>
-						<select id="category-select">
-							<option value="">Todas las categorías</option>
-						</select>
-					</div>
-				</div>
+									<div class="filter-widget">
+										<h3>Buscar</h3>
+										<input type="search" id="search-input" placeholder="Buscar artículos..." />
+									</div>				</div>
 
 				<div class="posts-container">
 					<ul class="posts-list">
@@ -294,7 +287,6 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 		<Footer />
 		<script>
 			const searchInput = document.getElementById('search-input') as HTMLInputElement;
-			const categorySelect = document.getElementById('category-select') as HTMLSelectElement;
 			const postList = document.querySelector('.posts-list') as HTMLUListElement;
 			const allPosts = Array.from(postList.querySelectorAll('li'));
 			const noResultsMessage = document.getElementById('no-results') as HTMLDivElement;
@@ -302,7 +294,7 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 
 			function filterPosts() {
 				const searchTerm = searchInput.value.toLowerCase();
-				const selectedCategory = categorySelect.value;
+				const selectedCategory = ''; // Always empty
 				let visiblePosts = 0;
 
 				allPosts.forEach(post => {
@@ -330,7 +322,6 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 			}
 
 			searchInput.addEventListener('input', filterPosts);
-			categorySelect.addEventListener('change', filterPosts);
-		</script>
+			</script>
 	</body>
 </html>
