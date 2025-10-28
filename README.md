@@ -12,44 +12,73 @@ Este es un blog moderno construido con Astro, utilizando Decap CMS para la gesti
 | `npm run preview` | Vista previa del build local                     |
 | `npm run cms`     | Inicia el servidor local de Decap CMS (para desarrollo) |
 
-## 📝 Gestión de Contenido con Decap CMS
+## 📝 Gestión de Contenido con Decap CMS: Mini-Tutorial
 
 Este proyecto utiliza [Decap CMS](https://decapcms.org/) para la gestión de contenido, con GitHub como backend.
 
-### Configuración Local de Decap CMS
+### 1. Acceso al Panel de Administración (Login)
 
-Para usar Decap CMS en tu entorno de desarrollo local:
+Para acceder al panel de administración de Decap CMS:
 
-1.  Asegúrate de que `local_backend: true` esté configurado en `public/admin/config.yml`.
-2.  Inicia el servidor de desarrollo de Astro: `npm run dev`.
-3.  En otra terminal, inicia el servidor de Decap CMS: `npm run cms`.
-4.  Accede al panel de administración en `http://localhost:4321/admin/`.
+1.  **Inicia tu servidor de desarrollo de Astro:** Abre tu terminal en la raíz del proyecto y ejecuta `npm run dev`.
+2.  **Inicia el servidor de Decap CMS:** En *otra* terminal, ejecuta `npm run cms`.
+3.  **Navega al panel:** Abre tu navegador y ve a `http://localhost:4321/admin/`.
+4.  **Autenticación:** Se te pedirá que te autentiques. Dependiendo de tu configuración (local o desplegada), esto se hará a través de:
+    *   **Local:** Si `local_backend: true` está activo, accederás directamente.
+    *   **GitHub:** Si estás usando el backend de GitHub, serás redirigido a GitHub para autorizar la aplicación.
 
-### Configuración de Decap CMS para Vercel (Producción)
+### 2. Configuración de Aplicaciones OAuth de GitHub
 
-Para que Decap CMS funcione con tu sitio desplegado en Vercel, necesitas configurar una aplicación OAuth de GitHub:
+Para que Decap CMS pueda interactuar con tu repositorio de GitHub (guardar cambios, etc.), necesita una aplicación OAuth de GitHub. Se recomienda tener una para desarrollo local y otra para producción (Vercel).
 
-1.  **Crea una Aplicación OAuth en GitHub:**
-    *   Ve a la configuración de tu cuenta de GitHub (o de tu organización) > **Developer settings > OAuth Apps**.
-    *   Haz clic en **"New OAuth App"**.
-    *   **Application name:** Un nombre descriptivo (ej. "Decap CMS para mi blog en Vercel").
+#### a) Para Desarrollo Local (localhost)
+
+1.  **Ve a GitHub:** Inicia sesión en GitHub y ve a la configuración de tu cuenta (o de tu organización) > **Developer settings > OAuth Apps**.
+2.  **Crea una Nueva App:** Haz clic en **"New OAuth App"**.
+3.  **Detalles de la Aplicación:**
+    *   **Application name:** Un nombre descriptivo (ej. "Decap CMS Local Dev").
+    *   **Homepage URL:** `http://localhost:4321` (o el puerto que use tu servidor de desarrollo de Astro).
+    *   **Authorization callback URL:** `http://localhost:4321/admin/`.
+4.  **Obtén el Client ID:** GitHub te proporcionará un **Client ID**.
+
+#### b) Para Producción (Vercel)
+
+1.  **Ve a GitHub:** Inicia sesión en GitHub y ve a la configuración de tu cuenta (o de tu organización) > **Developer settings > OAuth Apps**.
+2.  **Crea una Nueva App:** Haz clic en **"New OAuth App"**.
+3.  **Detalles de la Aplicación:**
+    *   **Application name:** Un nombre descriptivo (ej. "Decap CMS Vercel Prod").
     *   **Homepage URL:** La URL de tu sitio desplegado en Vercel (ej. `https://tu-app-vercel.vercel.app`).
     *   **Authorization callback URL:** `https://tu-app-vercel.vercel.app/admin/`.
-    *   GitHub te proporcionará un **Client ID**.
+4.  **Obtén el Client ID:** GitHub te proporcionará un **Client ID**.
 
-2.  **Actualiza `public/admin/config.yml`:**
-    Añade el `client_id` de tu aplicación OAuth de GitHub en la sección `backend` de tu `public/admin/config.yml`:
+### 3. Configuración de `public/admin/config.yml`
+
+Una vez que tengas los Client IDs, debes configurar tu `config.yml`:
+
+*   **Para Desarrollo Local:**
+    Asegúrate de que la sección `backend` tenga `local_backend: true`. No necesitas añadir el `client_id` aquí si usas el backend local.
+
+    ```yaml
+    backend:
+      name: github # Aunque uses local_backend, el nombre del backend principal sigue siendo GitHub
+      repo: tu-usuario/tu-repositorio
+      branch: main
+    local_backend: true # <-- Activa esto para desarrollo local
+    ```
+
+*   **Para Producción (Vercel):**
+    Añade el `client_id` de tu aplicación OAuth de GitHub para Vercel en la sección `backend` de tu `public/admin/config.yml`. **Recuerda que `local_backend: true` debe estar desactivado o eliminado para producción.**
 
     ```yaml
     backend:
       name: github
       repo: tu-usuario/tu-repositorio # Asegúrate de que sea tu repositorio
       branch: main # O la rama que uses
-      client_id: TU_CLIENT_ID_DE_GITHUB # <-- ¡Añade aquí tu Client ID!
+      client_id: TU_CLIENT_ID_DE_GITHUB_VERCEL # <-- ¡Añade aquí tu Client ID de Vercel!
     ```
-    **Importante:** Reemplaza `tu-usuario/tu-repositorio` con el nombre real de tu repositorio y `TU_CLIENT_ID_DE_GITHUB` con el Client ID que obtuviste de GitHub.
+    **Importante:** Reemplaza `tu-usuario/tu-repositorio` con el nombre real de tu repositorio y `TU_CLIENT_ID_DE_GITHUB_VERCEL` con el Client ID que obtuviste de GitHub para Vercel.
 
-### Reflejando Cambios de Decap CMS en Local
+### 4. Reflejando Cambios de Decap CMS en Local
 
 Cuando realizas cambios en Decap CMS (ya sea en local o en el panel desplegado) y estos se guardan en GitHub, para verlos en tu servidor de desarrollo local:
 
