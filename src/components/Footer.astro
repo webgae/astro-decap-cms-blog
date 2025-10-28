@@ -1,4 +1,11 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+    pages: CollectionEntry<'pages'>[];
+}
+
+const { pages } = Astro.props;
 ---
 
 <footer>
@@ -22,8 +29,9 @@
 				<h3 class="footer-title">Legal</h3>
 			</div>
 			<ul class="footer-links">
-				<li><a href="/legal/politica-de-privacidad/">Política de Privacidad</a></li>
-				<li><a href="/legal/terminos-de-servicio/">Términos de Servicio</a></li>
+				{pages.map((page) => (
+					<li><a href={`/${page.slug}/`}>{page.data.title}</a></li>
+				))}
 			</ul>
 		</div>
 
