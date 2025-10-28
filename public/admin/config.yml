@@ -4,7 +4,8 @@ backend:
   branch: main # O la rama que uses (ej. master)
 
 # Habilitar modo local para desarrollo (solo funciona en local)
-local_backend: true
+# local_backend: true # Desactivado para producción
+client_id: Ov23liCklzov2dSy8xKr
 
 media_library:
   name: cloudinary
