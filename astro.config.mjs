@@ -51,7 +51,4 @@ export default defineConfig({
       },
     })
   ],
-  redirects: {
-    '/admin': '/admin/index.html',
-  },
 });
