@@ -188,7 +188,7 @@ const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroI
 				</div>
 				{heroImage && (
 					<div class="hero-image">
-						<img src={heroImage} alt={`Imagen para ${title}`} />
+						<img src={heroImage.src} alt={`Imagen para ${title}`} />
 					</div>
 				)}
 				<slot />

@@ -27,21 +27,9 @@ if (!entry) {
 const { title, description, pubDate, updatedDate, heroImage } = entry.data;
 
 // Verificar si entry.render es una función antes de llamarla
-let Content;
-try {
-    if (typeof entry.render === 'function') {
-        const rendered = await entry.render();
-        Content = rendered.Content;
-    } else {
-        // Si entry.render no es una función, intentar usar entry.body directamente
-        Content = () => entry.body || 'No se pudo cargar el contenido';
-    }
-} catch (error) {
-    console.error('Error al renderizar el contenido:', error);
-    Content = () => 'Error al cargar el contenido';
-}
+let Content = entry.rendered.html;
 ---
 
 <BlogPost slug={entry.slug} title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} heroImage={heroImage} relatedPosts={[]}>
-    <Content />
+    <Fragment set:html={Content} />
 </BlogPost>
