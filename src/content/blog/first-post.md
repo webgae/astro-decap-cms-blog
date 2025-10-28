@@ -4,7 +4,7 @@ description: ¿Por qué tu WordPress lento te está costando un 300% de Conversi
 pubDate: Jul 08 2022
 heroImage: /src/assets/blog-placeholder-1.jpg
 ---
-# El Secreto Olvidado del SEO en 2025: ¿Por qué tu WordPress lento te está costando un 300% de Conversiones?
+# El Secreto Olvidado del SEO en 2025 ¿Por qué tu WordPress lento te está costando un 300% de Conversiones?
 
 ## La Verdad Incómoda que Nadie te Cuenta
 
