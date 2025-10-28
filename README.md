@@ -2,6 +2,26 @@
 
 Este es un blog moderno construido con Astro, utilizando Decap CMS para la gestión de contenido. Optimizado para rendimiento y SEO, y diseñado para ser desplegado en Vercel.
 
+## 📝 Flujo de Trabajo con Decap CMS y Cloudinary
+
+Para crear y gestionar contenido con imágenes optimizadas:
+
+1.  **Crea/Edita un Post en Decap CMS:**
+    *   Accede a `http://localhost:4321/admin/` (o la URL de tu sitio desplegado).
+    *   Crea o edita un post. Al subir imágenes, estas se guardarán automáticamente en Cloudinary.
+    *   Publica el post.
+
+2.  **Aprueba los Cambios en GitHub:**
+    *   Decap CMS creará una Pull Request (PR) en tu repositorio de GitHub.
+    *   Ve a GitHub, revisa la PR y haz "Merge" para integrar los cambios en la rama `main`.
+
+3.  **Sincroniza tu Proyecto Local:**
+    *   Abre tu terminal en la raíz del proyecto.
+    *   Ejecuta `git pull` para descargar los nuevos posts y cambios a tu máquina local.
+    *   Tu servidor de desarrollo de Astro (`npm run dev`) debería detectar los cambios y actualizar tu sitio.
+
+---
+
 ## 🚀 Comandos Esenciales
 
 | Comando           | Acción                                           |
