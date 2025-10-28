@@ -7,13 +7,6 @@ backend:
 # local_backend: true # Desactivado para producción
 client_id: Ov23liCklzov2dSy8xKr
 
-media_library:
-  name: cloudinary
-  config:
-    cloud_name: djjiagkho
-    api_key: 488363368914933
-    upload_preset: decap-cms-unsigned
-
 collections:
   - name: "blog" # Used in routes, e.g., /admin/collections/blog
     label: "Blog Posts" # Used in the UI
@@ -26,15 +19,4 @@ collections:
       - {label: "Publish Date", name: "pubDate", widget: "datetime"}
       - {label: "Updated Date", name: "updatedDate", widget: "datetime", required: false}
       - {label: "Hero Image", name: "heroImage", widget: "image", required: false}
-      - {label: "Body", name: "body", widget: "markdown"}
-
-  - name: "pages"
-    label: "Pages"
-    folder: "src/content/pages"
-    create: true
-    slug: "{{slug}}"
-    extension: "mdx"
-    format: "frontmatter"
-    fields:
-      - {label: "Title", name: "title", widget: "string"}
       - {label: "Body", name: "body", widget: "markdown"}
