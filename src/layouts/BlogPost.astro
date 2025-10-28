@@ -8,6 +8,7 @@ import ShareButtons from '../components/ShareButtons.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import TocController from '../components/TocController.jsx';
 import Giscus from '../components/Giscus.astro';
+import CloudinaryImage from '../components/CloudinaryImage.astro';
  
 interface Post {
 	id: string;
@@ -186,12 +187,15 @@ const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroI
 					</div>
 					<hr />
 				</div>
-				{heroImage && (
-					<div class="hero-image">
-						<img src={heroImage.src} alt={`Imagen para ${title}`} />
-					</div>
-				)}
-				<slot />
+				        {heroImage && (
+									<div class="hero-image">
+										{typeof heroImage === 'string' && heroImage.startsWith('http') ? (
+											<CloudinaryImage src={heroImage} alt={`Imagen para ${title}`} />
+										) : (
+											<img src={typeof heroImage === 'object' ? heroImage.src : heroImage} alt={`Imagen para ${title}`} />
+										)}
+									</div>
+								)}				<slot />
 			</div>
 
 			{relatedPosts.length > 0 && (
