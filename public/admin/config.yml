@@ -2,7 +2,6 @@ backend:
   name: github
   repo: webgae/astro-decap-cms-blog
   branch: main
-client_id: Ov23liCklzov2dSy8xKr
 
 collections:
   - name: "blog"
