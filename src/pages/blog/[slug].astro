@@ -1,35 +1,92 @@
 ---
 import BlogPost from '../../layouts/BlogPost.astro';
-import { getCollection } from 'astro:content';
+import { Markdown } from 'astro/components';
 
 export async function getStaticPaths() {
-    const blogEntries = await getCollection('blog');
-    if (blogEntries.length === 0) {
-        return [{ params: { slug: '404' }, props: { entry: undefined } }];
-    }
-    return blogEntries.map(entry => {
-        // Usar el nombre del archivo sin la extensión como slug si entry.slug no está disponible
-        const slug = entry.slug || entry.id.replace(/\.(md|mdx)$/, '');
-        return {
-            params: { slug },
-            props: { entry },
-        };
+    // FIX: Define constants inside the function scope
+    const DATO_API_URL = 'https://graphql.datocms.com/';
+    const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
+
+    const query = `
+        query AllPosts {
+            allPosts {
+                slug
+            }
+        }
+    `;
+
+    const response = await fetch(DATO_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${DATO_API_TOKEN}`
+        },
+        body: JSON.stringify({ query })
     });
+
+    const { data } = await response.json();
+    const posts = data.allPosts;
+
+    if (!posts) return [];
+
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        // Para getStaticPaths, solo necesitamos el slug. Los datos del post se obtendrán en el componente.
+    }));
 }
 
-const { entry } = Astro.props;
+const { slug } = Astro.params;
 
-// Si no se encuentra ninguna entrada (por ejemplo, aún no hay archivos de contenido), redirige a 404
-if (!entry) {
+// FIX: Define constants again for the component render scope
+const DATO_API_URL = 'https://graphql.datocms.com/';
+const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
+
+const query = `
+    query PostBySlug($slug: String!) {
+        post(filter: { slug: { eq: $slug } }) {
+            id
+            title
+            slug
+            description
+            body(markdown: true)
+            coverImage {
+                url
+            }
+            _firstPublishedAt
+        }
+    }
+`;
+
+const response = await fetch(DATO_API_URL, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${DATO_API_TOKEN}`
+    },
+    body: JSON.stringify({ query, variables: { slug } })
+});
+
+const { data } = await response.json();
+const post = data.post;
+
+if (!post) {
     return Astro.redirect('/404');
 }
 
-const { title, description, pubDate, updatedDate, heroImage } = entry.data;
-
-// Verificar si entry.render es una función antes de llamarla
-let Content = entry.rendered.html;
+const { title, description, body, coverImage, _firstPublishedAt } = post;
+const heroImage = coverImage?.url;
+const pubDate = _firstPublishedAt;
 ---
 
-<BlogPost slug={entry.slug} title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} heroImage={heroImage} relatedPosts={[]}>
-    <Fragment set:html={Content} />
+<BlogPost 
+    slug={slug} 
+    title={title} 
+    description={description} 
+    pubDate={new Date(pubDate)} 
+    heroImage={heroImage}
+    relatedPosts={[]}
+>
+    {body && <Markdown content={body} />}
 </BlogPost>

@@ -1,0 +1,3 @@
+18:14:32 [ERROR] Cannot read properties of undefined (reading 'count')
+  Stack trace:
+    at Module.getStaticPaths (C:\Users\Joaqu%C3%ADn\Documents\Astro-decapcms\astro-decap-cms-blog\src\pages\blog\%5B...page%5D.astro:37:47)
