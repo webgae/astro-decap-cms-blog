@@ -1,5 +1,3 @@
-Opening an issue pre-populates it with the error message and debugging data.
-Please verify the information is correct and remove sensitive data if exists.
+The redirect_uri is not associated with this application.
 
-Details
-NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node. at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751526) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752015) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751912) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752946) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753270) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:756002) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072)
+The application might be misconfigured or could be trying to redirect you to a website you weren't expecting.
