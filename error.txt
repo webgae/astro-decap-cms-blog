@@ -1,5 +1,0 @@
-index.js:17 decap-cms-app 3.1.11
-bootstrap.js:59 decap-cms-core 3.3.7
-bootstrap.js:79 Uncaught TypeError: Cannot read properties of null (reading 'appendChild')Entender este error
-index.html:62 Uncaught ReferenceError: CMS is not defined
-    at HTMLDocument.<anonymous> (index.html:62:7)
