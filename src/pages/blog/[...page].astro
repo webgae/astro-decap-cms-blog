@@ -6,6 +6,18 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_TITLE } from '../../consts';
 
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
+
 export const prerender = true;
 
 const PAGE_SIZE = 10;
@@ -16,9 +28,12 @@ export async function getStaticPaths({ paginate }) {
     const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
 
     const metaQuery = `
-        query AllPostsMeta {
-            _allPostsMeta {
+        query AllArticulosMeta {
+            _allArticulosMeta {
                 count
+            }
+            allArticulos {
+                id
             }
         }
     `;
@@ -33,9 +48,18 @@ export async function getStaticPaths({ paginate }) {
         body: JSON.stringify({ query: metaQuery })
     });
 
-    const { data: metaData } = await metaResponse.json();
-    const totalPosts = metaData._allPostsMeta.count;
-    const pageCount = Math.ceil(totalPosts / PAGE_SIZE);
+    const metaResult = await metaResponse.json();
+    console.log('Meta response:', metaResult);
+
+    if (!metaResult.data || !metaResult.data._allArticulosMeta) {
+        console.error('Meta query failed:', metaResult);
+        console.log('Available data:', metaResult.data);
+        throw new Error('No se pudo obtener el conteo de artículos. Verifica el nombre del modelo en DatoCMS.');
+    }
+
+    const totalPosts = metaResult.data._allArticulosMeta.count;
+    console.log('Total posts found:', totalPosts);
+    const pageCount = Math.ceil(totalPosts / 10);
 
     const pagePaths = Array.from({ length: pageCount || 1 }, (_, i) => ({
         params: { page: (i + 1).toString() },
@@ -53,16 +77,23 @@ const DATO_API_URL = 'https://graphql.datocms.com/';
 const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
 
 const postsQuery = `
-    query AllPosts($first: Int = ${PAGE_SIZE}, $skip: Int = ${(currentPage - 1) * PAGE_SIZE}) {
-        allPosts(first: $first, skip: $skip, orderBy: _firstPublishedAt_DESC) {
+    query AllArticulos {
+        allArticulos(first: 10, skip: ${(currentPage - 1) * 10}, orderBy: _firstPublishedAt_DESC) {
             id
-            title
-            slug
-            description
-            coverImage {
-                url
-            }
+            titulo
             _firstPublishedAt
+            categorias {
+                desarrolloweb
+                id
+            }
+            imagen {
+                url
+                alt
+            }
+            categorias {
+                desarrolloweb
+                id
+            }
         }
     }
 `;
@@ -77,8 +108,21 @@ const postsResponse = await fetch(DATO_API_URL, {
     body: JSON.stringify({ query: postsQuery })
 });
 
-const { data: postsData } = await postsResponse.json();
-const posts = postsData.allPosts;
+const postsResult = await postsResponse.json();
+console.log('Posts response:', postsResult);
+
+if (postsResult.errors) {
+    console.error('GraphQL errors:', postsResult.errors);
+    throw new Error('Errores en la query GraphQL. Verifica los campos del modelo.');
+}
+
+if (!postsResult.data) {
+    console.error('Posts query failed - no data:', postsResult);
+    throw new Error('No se pudieron obtener los artículos. Verifica la configuración en DatoCMS.');
+}
+
+const posts = postsResult.data.allArticulos || [];
+console.log('Posts array:', posts);
 
 const pageTitle = `Blog - ${SITE_TITLE}`;
 const pageDescription = "Explora nuestros últimos artículos, tutoriales y noticias sobre desarrollo web y tecnología.";
@@ -115,24 +159,63 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 				transform: translateY(-5px);
 				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 			}
-			.posts-list li a {
-				display: block;
+			.article-card {
+				display: flex;
+				align-items: center; /* Centra verticalmente la imagen y el texto */
+				padding: 1rem; /* Añade un padding interno a la tarjeta */
 				text-decoration: none;
+				height: 100%;
 			}
-			.post-content {
-				padding: 1.5rem;
+			.post-image-container {
+				flex-shrink: 0; /* Evita que la imagen se encoja */
+				width: 60px; /* Ancho más pequeño para la imagen */
+				height: 60px; /* Misma altura para que sea un círculo */
+				overflow: hidden;
+				border-radius: 50%; /* Hace que la imagen sea redonda */
+			}
+			.post-image {
+				width: 100%;
+				height: 100%;
+				object-fit: cover; /* Asegura que la imagen cubra el contenedor sin deformarse */
+			}
+			.article-content {
+				padding-left: 1rem; /* Reduce el margen entre la imagen y el texto */
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1; /* Hace que esta sección ocupe el espacio restante */
+				justify-content: center; /* Centra el contenido de texto verticalmente */
 			}
 			.title {
 				margin: 0;
 				font-size: 1.25rem;
 				color: rgb(var(--gray-dark));
 				line-height: 1.3;
-				margin-bottom: 0.5rem;
 			}
-			.date {
-				margin: 0;
-				font-size: 0.9rem;
-				color: rgb(var(--gray));
+			.title-wrapper {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap; /* Permite que las categorías pasen a la siguiente línea si no caben */
+				gap: 0.5rem;
+			}
+			.post-text {
+				flex-grow: 1; /* Para que el texto ocupe el espacio disponible */
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			.categories-container {
+				display: flex;
+				gap: 0.5rem;
+			}
+			.category-tag {
+				display: inline-block;
+				padding: 0.25rem 0.75rem;
+				background-color: rgba(var(--accent-rgb), 0.1);
+				color: rgb(var(--accent));
+				border-radius: 9999px;
+				text-decoration: none;
+				font-size: 0.8rem;
+				font-weight: 600;
 			}
 			#no-results {
 				width: 100%;
@@ -196,23 +279,24 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
                 <div class="posts-container">
                     <ul class="posts-list">
                         {posts && posts.map((post) => {
-                            const { title, slug, coverImage, _firstPublishedAt } = post;
-                            const heroImage = coverImage?.url;
+                            const { titulo, _firstPublishedAt, categorias, imagen } = post;
                             const pubDate = _firstPublishedAt;
                             return (
                                 <li>
-                                    <a href={`/blog/${slug}/`} class="article-card">
+                                    <a href={`/blog/${slugify(post.titulo)}/`} class="article-card">
+                                        {imagen && (
+                                            <div class="post-image-container">
+                                                <Image class="post-image" src={imagen.url} alt={imagen.alt || `Imagen para ${titulo}`} width={150} height={84} />
+                                            </div>
+                                        )}
                                         <div class="article-content">
-                                            {heroImage && (
-                                                <div class="post-image-container">
-                                                    <img class="post-image" width={50} height={50} src={heroImage} alt={`Imagen para ${title}`} />
-                                                </div>
-                                            )}
                                             <div class="post-text">
-                                                <h4 class="title">{title}</h4>
-                                                <p class="date">
-                                                    <FormattedDate date={new Date(pubDate)} />
-                                                </p>
+                                                <div class="title-wrapper">
+                                                    <h4 class="title">{titulo}</h4>
+                                                    {categorias && categorias.length > 0 && (
+                                                        <div class="categories-container">{categorias.map(cat => <span class="category-tag">{cat.desarrolloweb}</span>)}</div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </a>

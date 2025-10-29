@@ -3,14 +3,27 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import { Markdown } from 'astro/components';
 
 export async function getStaticPaths() {
+    function slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
     // FIX: Define constants inside the function scope
     const DATO_API_URL = 'https://graphql.datocms.com/';
     const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
 
     const query = `
-        query AllPosts {
-            allPosts {
-                slug
+        query AllArticulos {
+            allArticulos {
+                id
+                titulo
             }
         }
     `;
@@ -26,34 +39,57 @@ export async function getStaticPaths() {
     });
 
     const { data } = await response.json();
-    const posts = data.allPosts;
+    const posts = data.allArticulos;
 
     if (!posts) return [];
 
     return posts.map((post) => ({
-        params: { slug: post.slug },
-        // Para getStaticPaths, solo necesitamos el slug. Los datos del post se obtendrán en el componente.
+        params: { slug: slugify(post.titulo) },
+        props: { posts }
     }));
 }
 
 const { slug } = Astro.params;
+const { posts } = Astro.props;
+
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
 
 // FIX: Define constants again for the component render scope
 const DATO_API_URL = 'https://graphql.datocms.com/';
 const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
 
+// Convertir slug de URL a ID para buscar en DatoCMS
+const postId = posts.find(p => slugify(p.titulo) === slug)?.id;
+if (!postId) {
+    console.error('Post not found for slug:', slug);
+    return Astro.redirect('/404');
+}
+
 const query = `
-    query PostBySlug($slug: String!) {
-        post(filter: { slug: { eq: $slug } }) {
+    query ArticuloById($id: ItemId!) {
+        articulo(filter: { id: { eq: $id } }) {
             id
-            title
-            slug
-            description
-            body(markdown: true)
-            coverImage {
+            titulo
+            contenidoPost
+            fecha
+            imagen {
                 url
+                alt
+                title
             }
-            _firstPublishedAt
+            categorias {
+                desarrolloweb
+            }
         }
     }
 `;
@@ -65,28 +101,41 @@ const response = await fetch(DATO_API_URL, {
         'Accept': 'application/json',
         'Authorization': `Bearer ${DATO_API_TOKEN}`
     },
-    body: JSON.stringify({ query, variables: { slug } })
+    body: JSON.stringify({ query, variables: { id: postId } })
 });
 
-const { data } = await response.json();
-const post = data.post;
+const { data, errors } = await response.json();
+console.log('Single post response:', data);
+console.log('Errors:', errors);
+console.log('Content:', data?.articulo?.contenidoPost);
+console.log('Full post data:', JSON.stringify(data?.articulo, null, 2));
+const post = data?.articulo;
 
 if (!post) {
+    console.error('Post not found for ID:', slug.replace('post-', ''));
     return Astro.redirect('/404');
 }
 
-const { title, description, body, coverImage, _firstPublishedAt } = post;
-const heroImage = coverImage?.url;
-const pubDate = _firstPublishedAt;
+const { titulo, contenidoPost, fecha, imagen, categorias } = post;
+const pubDate = fecha;
+const heroImage = imagen?.url || "";
 ---
 
-<BlogPost 
-    slug={slug} 
-    title={title} 
-    description={description} 
-    pubDate={new Date(pubDate)} 
-    heroImage={heroImage}
+<BlogPost
+    slug={slug}
+    title={titulo}
+    description="Artículo de blog"
+    pubDate={new Date(pubDate)}
     relatedPosts={[]}
+    categories={categorias}
 >
-    {body && <Markdown content={body} />}
+    {imagen && <img src={imagen.url} alt={imagen.alt || titulo} title={imagen.title || titulo} class="hero-image" />}
+    <div set:html={contenidoPost} />
 </BlogPost>
+
+<style>
+    .categoria {
+        margin: 1rem 0;
+        font-style: italic;
+    }
+</style>

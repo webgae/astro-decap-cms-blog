@@ -3,12 +3,10 @@ import { Image } from 'astro:assets';
 import { SITE_TITLE } from '../consts';
 import Layout from './Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import ArticleCard from '../components/ArticleCard.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import TocController from '../components/TocController.jsx';
 import Giscus from '../components/Giscus.astro';
-import CloudinaryImage from '../components/CloudinaryImage.astro';
  
 interface Post {
 	id: string;
@@ -19,21 +17,24 @@ interface Props {
 	title: string;
 	description: string;
 	pubDate: Date;
-	updatedDate?: Date | null;
-	relatedPosts?: Post[];
 	slug: string; // Añadimos la prop para el slug
-	heroImage?: string; // Añadimos la prop para la imagen heroica
+	heroImage?: string;
+	categories?: { desarrolloweb: string }[]; // Añadimos la prop para las categorías
 }
 
-const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroImage } = Astro.props;
+const { 
+	title, description, pubDate, 
+	slug, 
+	heroImage, categories = [] 
+} = Astro.props;
 ---
 <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": title,
     "description": description,
-    "datePublished": pubDate.toISOString(),
-    "dateModified": updatedDate ? updatedDate.toISOString() : pubDate.toISOString(),
+    "datePublished": pubDate ? pubDate.toISOString() : new Date().toISOString(),
+    "dateModified": pubDate ? pubDate.toISOString() : new Date().toISOString(),
     "author": {
         "@type": "Person",
         "name": "Joaquín",
@@ -108,9 +109,23 @@ const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroI
 			margin-bottom: 0.5em;
 			color: rgb(var(--gray));
 		}
-		.last-updated-on {
-			font-style: italic;
+		.categories-container {
+			text-align: center;
+			margin-bottom: 1rem;
 		}
+		.category-tag {
+			display: inline-block;
+			padding: 0.25rem 0.75rem;
+			background-color: rgba(var(--accent-rgb), 0.1);
+			color: rgb(var(--accent));
+			border-radius: 9999px;
+			font-size: 0.9rem;
+			font-weight: 600;
+			text-decoration: none;
+			margin: 0 0.25rem;
+			transition: background-color 0.2s;
+		}
+
 		
 		/* --- Estilos para el efecto de Sidebar --- */
 		#page-wrapper {
@@ -143,27 +158,6 @@ const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroI
 		.blog-post-article .wrapper {
 			max-width: 800px;
 		}
-
-
-		/* Estilos para Artículos Relacionados */
-		.related-articles {
-			margin-top: 4rem;
-			padding-top: 2rem;
-			border-top: 1px solid rgb(var(--gray-light));
-		}
-		.related-articles h2 {
-			text-align: center;
-			font-size: 2rem;
-			margin-bottom: 2rem;
-		}
-		.related-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-			gap: 2rem;
-		}
-		.dark .related-articles {
-			border-top-color: rgb(var(--gray-light));
-		}
 	</style>
 	<article class="blog-post-article">
 		<div class="wrapper">
@@ -176,36 +170,24 @@ const { title, description, pubDate, updatedDate, relatedPosts = [], slug, heroI
 				<div class="title">
 					<h1>{title}</h1>
 					<div class="date">
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<div class="last-updated-on">
-									Última actualización: <FormattedDate date={updatedDate} />
-								</div>
-							)
-						}
+						{pubDate && <FormattedDate date={pubDate} />}
+					</div>
+					<div class="categories-container">
+						{categories.map(cat => (
+							<span class="category-tag">
+								{cat.desarrolloweb}
+							</span>
+						))}
 					</div>
 					<hr />
 				</div>
 				        {heroImage && (
 									<div class="hero-image">
-										{typeof heroImage === 'string' && heroImage.startsWith('http') ? (
-											<CloudinaryImage src={heroImage} alt={`Imagen para ${title}`} />
-										) : (
-											<img src={typeof heroImage === 'object' ? heroImage.src : heroImage} alt={`Imagen para ${title}`} />
-										)}
+										<img src={heroImage} alt={`Imagen para ${title}`} />
 									</div>
 								)}				<slot />
 			</div>
 
-			{relatedPosts.length > 0 && (
-				<section class="related-articles">
-					<h2>Artículos Relacionados</h2>
-					<div class="related-grid">
-						{relatedPosts.map(p => <ArticleCard post={p} />)}
-					</div>
-				</section>
-			)}
 			<ShareButtons title={title} shareUrl={Astro.url.href} />
 
 			<!-- Nuevo sistema de comentarios con Giscus -->
