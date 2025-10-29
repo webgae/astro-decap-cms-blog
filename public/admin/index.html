@@ -11,34 +11,3 @@
   <script src="https://unpkg.com/decap-cms@3.1.11/dist/decap-cms.js"></script>
 </body>
 </html>
-```
-
-**Eso es todo.** Decap CMS se inicializa automáticamente y busca el `config.yml` en la misma carpeta.
-
-## ¿Por qué estos cambios?
-
-1. **Versión fija `3.1.11`**: Evita el bug del `removeChild` que tenías
-2. **Sin inicialización manual**: Decap CMS la hace automáticamente
-3. **Sin div**: No es necesario, Decap crea su propio contenedor
-4. **Limpio y simple**: Menos código = menos problemas
-
-## Ahora verifica tu estructura de archivos:
-
-Debería ser exactamente así:
-```
-public/
-  └── admin/
-      ├── index.html  (el código de arriba)
-      └── config.yml  (tu configuración sin client_id)
-```
-
-## Y tu `api/auth.js` debe estar en la raíz del proyecto:
-```
-proyecto/
-  ├── api/
-  │   └── auth.js  (el código con postMessage que te pasé)
-  ├── public/
-  │   └── admin/
-  │       ├── index.html
-  │       └── config.yml
-  └── ... otros archivos
