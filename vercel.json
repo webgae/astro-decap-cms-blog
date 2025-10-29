@@ -1,4 +1,14 @@
 {
+  "functions": {
+    "api/auth.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    { "source": "/admin/(.*)", "destination": "/admin/index.html" }
+  ]
+}
+{
   "routes": [
     { "src": "/admin/config.yml", "dest": "/admin/config.yml" },
     { "src": "/admin/(.*)", "dest": "/admin/index.html" }
