@@ -151,6 +151,7 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 			.posts-list li {
 				background-color: #fff;
 				border-radius: 12px;
+				padding: 1rem; /* Añade espacio interno a la tarjeta */
 				overflow: hidden;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 				transition: transform 0.2s, box-shadow 0.2s;
@@ -162,7 +163,6 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 			.article-card {
 				display: flex;
 				align-items: center; /* Centra verticalmente la imagen y el texto */
-				padding: 1rem; /* Añade un padding interno a la tarjeta */
 				text-decoration: none;
 				height: 100%;
 			}
@@ -196,6 +196,10 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 				align-items: center;
 				flex-wrap: wrap; /* Permite que las categorías pasen a la siguiente línea si no caben */
 				gap: 0.5rem;
+			}
+			.title-link {
+				text-decoration: none; /* Elimina el subrayado del título */
+				color: inherit; /* Asegura que el título herede el color de .title */
 			}
 			.post-text {
 				flex-grow: 1; /* Para que el texto ocupe el espacio disponible */
@@ -283,23 +287,27 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
                             const pubDate = _firstPublishedAt;
                             return (
                                 <li>
-                                    <a href={`/blog/${slugify(post.titulo)}/`} class="article-card">
+                                    <div class="article-card">
                                         {imagen && (
-                                            <div class="post-image-container">
-                                                <Image class="post-image" src={imagen.url} alt={imagen.alt || `Imagen para ${titulo}`} width={150} height={84} />
-                                            </div>
+                                            <a href={`/blog/${slugify(post.titulo)}/`} class="post-image-container">
+                                                <Image class="post-image" src={imagen.url} alt={imagen.alt || `Imagen para ${titulo}`} width={60} height={60} />
+                                            </a>
                                         )}
                                         <div class="article-content">
                                             <div class="post-text">
                                                 <div class="title-wrapper">
-                                                    <h4 class="title">{titulo}</h4>
+                                                    <a href={`/blog/${slugify(post.titulo)}/`} class="title-link">
+                                                        <h4 class="title">{titulo}</h4>
+                                                    </a>
                                                     {categorias && categorias.length > 0 && (
-                                                        <div class="categories-container">{categorias.map(cat => <span class="category-tag">{cat.desarrolloweb}</span>)}</div>
+                                                        <div class="categories-container">
+                                                            {categorias.map(cat => <a href={`/blog/categorias/${cat.id}/`} class="category-tag">{cat.desarrolloweb}</a>)}
+                                                        </div>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </li>
                             );
                         })}
