@@ -5,9 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Content Manager</title>
-</head>
-<body>
-  <!-- Decap CMS se inicializa automáticamente y busca config.yml en /admin/config.yml -->
   <script src="https://unpkg.com/decap-cms@3.1.11/dist/decap-cms.js"></script>
+  <script>
+    window.CMS_CONFIG = {
+      backend: {
+        name: "github",
+        repo: "webgae/astro-decap-cms-blog",
+        branch: "main",
+        base_url: window.location.protocol + "//" + window.location.host,
+        auth_endpoint: "/api/auth",
+      },
+      media_library: {
+        name: "cloudinary",
+        config: {
+          cloud_name: "djjiagkho",
+          api_key: "488363368914933",
+          upload_preset: "decap-cms-unsigned",
+        },
+      },
+      media_folder: "public/uploads",
+      public_folder: "/uploads",
+      collections: [
+        {
+          name: "blog",
+          label: "Blog Posts",
+          folder: "src/content/blog",
+          create: true,
+          slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+          fields: [
+            {label: "Title", name: "title", widget: "string"},
+            {label: "Description", name: "description", widget: "string"},
+            {label: "Publish Date", name: "pubDate", widget: "datetime"},
+            {label: "Updated Date", name: "updatedDate", widget: "datetime", required: false},
+            {label: "Hero Image", name: "heroImage", widget: "image", required: false},
+            {label: "Body", name: "body", widget: "markdown"},
+          ],
+        },
+        {
+          name: "pages",
+          label: "Pages",
+          folder: "src/content/pages",
+          create: true,
+          slug: "{{slug}}",
+          extension: "mdx",
+          format: "frontmatter",
+          fields: [
+            {label: "Title", name: "title", widget: "string"},
+            {label: "Body", name: "body", widget: "markdown"},
+          ],
+        },
+      ],
+    };
+
+    CMS.init({ config: window.CMS_CONFIG });
+  </script>
 </body>
 </html>
