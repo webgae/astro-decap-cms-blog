@@ -1,17 +1,5 @@
-Error
-There's been an error - please open an issue on GitHub.
-
 Opening an issue pre-populates it with the error message and debugging data.
 Please verify the information is correct and remove sensitive data if exists.
 
 Details
 NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node. at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751526) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752015) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751912) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752946) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753270) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:756002) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072)
-
-Error loading the CMS configuration
-Config Errors:
-config must have required property 'media_folder'
-config must have required property 'media_library'
-config must match a schema in anyOf
-config must have required property 'backend'
-config must have required property 'collections'
-Check your config.yml file.

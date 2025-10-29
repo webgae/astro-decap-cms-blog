@@ -1,11 +1,10 @@
 backend:
   name: github
-  repo: webgae/astro-decap-cms-blog # Reemplaza con tu usuario/repositorio de GitHub
-  branch: main # O la rama que uses (ej. master)
-
-# Habilitar modo local para desarrollo (solo funciona en local)
-# local_backend: true # Desactivado para producción
-client_id: Ov23liCklzov2dSy8xKr
+  repo: webgae/astro-decap-cms-blog
+  branch: main
+  base_url: https://astro-decap-cms-blog.vercel.app
+  auth_endpoint: api/auth
+  client_id: Ov23liCklzov2dSy8xKr
 
 media_library:
   name: cloudinary
@@ -14,13 +13,16 @@ media_library:
     api_key: 488363368914933
     upload_preset: decap-cms-unsigned
 
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
 collections:
-  - name: "blog" # Used in routes, e.g., /admin/collections/blog
-    label: "Blog Posts" # Used in the UI
-    folder: "src/content/blog" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
-    fields: # The fields each document in this collection will have
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Description", name: "description", widget: "string"}
       - {label: "Publish Date", name: "pubDate", widget: "datetime"}
