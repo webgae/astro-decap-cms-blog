@@ -4,7 +4,6 @@ backend:
   branch: main
   base_url: https://astro-decap-cms-blog.vercel.app
   auth_endpoint: api/auth
-  client_id: Ov23liCklzov2dSy8xKr
 
 media_library:
   name: cloudinary
