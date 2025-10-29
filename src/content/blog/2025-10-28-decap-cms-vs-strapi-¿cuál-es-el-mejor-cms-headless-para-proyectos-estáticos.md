@@ -5,7 +5,8 @@ description: El ecosistema de gestión de contenidos ha evolucionado
   frameworks como Next.js, Gatsby, Astro o Hugo han ganado popularidad por su
   velocidad, seguridad y escalabilidad. Sin embargo, surge una pregunta
   inevitable
-pubDate: 2025-10-28T15:43:00.000+01:00
+pubDate: 2025-10-22T15:43:00.000Z
+updatedDate: 2025-10-29T13:12:00.000Z
 heroImage: https://res.cloudinary.com/djjiagkho/image/upload/v1761662652/Decap_CMS_vs_Strapi_wnb3lm.jpg
 ---
 # Decap CMS vs Strapi: ¿Cuál es el mejor CMS Headless para proyectos estáticos?
