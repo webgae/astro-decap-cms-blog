@@ -1,25 +1,40 @@
 backend:
   name: github
-  repo: webgae/astro-decap-cms-blog
-  branch: main
-  base_url: https://astro-decap-cms-blog.vercel.app
-  auth_endpoint: api/auth # si usas OAuth con vercel.json (opcional)
-  client_id: Ov23liCklzov2dSy8xKr
+  repo: webgae/astro-decap-cms-blog # Reemplaza con tu usuario/repositorio de GitHub
+  branch: main # O la rama que uses (ej. master)
 
-media_folder: "public/uploads" # donde se guardan los archivos en el repo
-public_folder: "/uploads"      # cómo se servirán públicamente
+# Habilitar modo local para desarrollo (solo funciona en local)
+# local_backend: true # Desactivado para producción
+client_id: Ov23liCklzov2dSy8xKr
 
 media_library:
-  name: "uploadcare" # puedes usar "default" si no usas servicios externos
+  name: cloudinary
   config:
-    publicKey: "demo" # si usas uploadcare demo
+    cloud_name: djjiagkho
+    api_key: 488363368914933
+    upload_preset: decap-cms-unsigned
 
 collections:
-  - name: "blog"
-    label: "Blog Posts"
-    folder: "src/content/blog"
+  - name: "blog" # Used in routes, e.g., /admin/collections/blog
+    label: "Blog Posts" # Used in the UI
+    folder: "src/content/blog" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template
+    fields: # The fields each document in this collection will have
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "string"}
+      - {label: "Publish Date", name: "pubDate", widget: "datetime"}
+      - {label: "Updated Date", name: "updatedDate", widget: "datetime", required: false}
+      - {label: "Hero Image", name: "heroImage", widget: "image", required: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "pages"
+    label: "Pages"
+    folder: "src/content/pages"
     create: true
     slug: "{{slug}}"
+    extension: "mdx"
+    format: "frontmatter"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}

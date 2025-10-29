@@ -1,33 +1,17 @@
-OPCIÓN 1 — Sirve el config.yml como archivo estático correcto
+Error
+There's been an error - please open an issue on GitHub.
 
-Este es el fallo número uno en Vercel.
+Opening an issue pre-populates it with the error message and debugging data.
+Please verify the information is correct and remove sensitive data if exists.
 
-Vercel suele servir los YAML con tipo MIME incorrecto.
-Solución: mueve tu config.yml a public/admin/config.yml y asegúrate de que se sube tal cual, no procesado por Astro.
+Details
+NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node. at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751526) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752015) at Tl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:750977) at Ol (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:751912) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:752946) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753270) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072) at Il (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:756002) at Rl (https://unpkg.com/decap-cms@%5E3.0.0/dist/decap-cms.js:5:753072)
 
-Tu estructura debe ser:
-
-public/
-  admin/
-    index.html
-    config.yml
-
-
-Y en tu /admin/index.html:
-
-<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-
-Nada más.
-
-Luego, asegúrate de que al visitar:
-👉 https://astro-decap-cms-blog.vercel.app/admin/config.yml
-
-se vea tu YAML plano, no el HTML del sitio.
-Si ves HTML, Vercel está reescribiendo la ruta y debes agregar un vercel.json con:
-
-{
-  "rewrites": [
-    { "source": "/admin/config.yml", "destination": "/admin/config.yml" }
-  ]
-}
+Error loading the CMS configuration
+Config Errors:
+config must have required property 'media_folder'
+config must have required property 'media_library'
+config must match a schema in anyOf
+config must have required property 'backend'
+config must have required property 'collections'
+Check your config.yml file.
