@@ -2,10 +2,24 @@ backend:
   name: github
   repo: webgae/astro-decap-cms-blog
   branch: main
+  base_url: https://astro-decap-cms-blog.vercel.app
+  auth_endpoint: api/auth # si usas OAuth con vercel.json (opcional)
+  client_id: Ov23liCklzov2dSy8xKr
+
+media_folder: "public/uploads" # donde se guardan los archivos en el repo
+public_folder: "/uploads"      # cómo se servirán públicamente
+
+media_library:
+  name: "uploadcare" # puedes usar "default" si no usas servicios externos
+  config:
+    publicKey: "demo" # si usas uploadcare demo
 
 collections:
   - name: "blog"
     label: "Blog Posts"
     folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
     fields:
-      - {label: "Title", name: "title", widget: "string"}
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }
