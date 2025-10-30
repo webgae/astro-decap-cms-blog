@@ -1,24 +1,10 @@
 ---
 import BlogPost from '../../layouts/BlogPost.astro';
-import { Markdown } from 'astro/components';
+import { fetchDatoCMS, getOptimizedImageUrl } from '../../lib/datocms.js';
+import { slugify } from '../../utils.js';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
-    function slugify(text) {
-        return text
-            .toString()
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w\-]+/g, '')
-            .replace(/\-\-+/g, '-')
-            .replace(/^-+/, '')
-            .replace(/-+$/, '');
-    }
-
-    // FIX: Define constants inside the function scope
-    const DATO_API_URL = 'https://graphql.datocms.com/';
-    const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
-
     const query = `
         query AllArticulos {
             allArticulos {
@@ -28,17 +14,7 @@ export async function getStaticPaths() {
         }
     `;
 
-    const response = await fetch(DATO_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${DATO_API_TOKEN}`
-        },
-        body: JSON.stringify({ query })
-    });
-
-    const { data } = await response.json();
+    const data = await fetchDatoCMS({ query });
     const posts = data.allArticulos;
 
     if (!posts) return [];
@@ -51,22 +27,6 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const { posts } = Astro.props;
-
-function slugify(text) {
-    return text
-        .toString()
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-}
-
-// FIX: Define constants again for the component render scope
-const DATO_API_URL = 'https://graphql.datocms.com/';
-const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
 
 // Convertir slug de URL a ID para buscar en DatoCMS
 const postId = posts.find(p => slugify(p.titulo) === slug)?.id;
@@ -94,21 +54,7 @@ const query = `
     }
 `;
 
-const response = await fetch(DATO_API_URL, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${DATO_API_TOKEN}`
-    },
-    body: JSON.stringify({ query, variables: { id: postId } })
-});
-
-const { data, errors } = await response.json();
-console.log('Single post response:', data);
-console.log('Errors:', errors);
-console.log('Content:', data?.articulo?.contenidoPost);
-console.log('Full post data:', JSON.stringify(data?.articulo, null, 2));
+const data = await fetchDatoCMS({ query, variables: { id: postId } });
 const post = data?.articulo;
 
 if (!post) {
@@ -118,7 +64,13 @@ if (!post) {
 
 const { titulo, contenidoPost, fecha, imagen, categorias } = post;
 const pubDate = fecha;
-const heroImage = imagen?.url || "";
+
+const optimizedHeroImage = imagen ? getOptimizedImageUrl({
+    src: imagen.url,
+    width: 1200,
+    format: 'webp',
+    fit: 'max' // 'max' para ajustar sin cortar
+}) : null;
 ---
 
 <BlogPost
@@ -126,9 +78,17 @@ const heroImage = imagen?.url || "";
     title={titulo}
     description="Artículo de blog"
     pubDate={new Date(pubDate)}
-    categories={categorias}
+        categories={categorias}
 >
-    {imagen && <img src={imagen.url} alt={imagen.alt || titulo} title={imagen.title || titulo} class="hero-image" />}
+    {optimizedHeroImage && (
+        <Image 
+            src={optimizedHeroImage} 
+            alt={imagen.alt || titulo} 
+            width={1200} 
+            height={600}  
+            class="hero-image" 
+        />
+    )}
     <div set:html={contenidoPost} />
 </BlogPost>
 

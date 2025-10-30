@@ -6,11 +6,20 @@ import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import vercel from '@astrojs/vercel';
 import pwa from '@vite-pwa/astro';
+
+// Define la URL del sitio dinámicamente basado en el entorno de Vercel
+const siteUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'http://localhost:4321';
+
 // https://astro.build/config
 export default defineConfig({
-  // Usamos una variable de entorno para el dominio.
-  // En desarrollo, usará localhost. En producción, usará la URL que definas.
-  site: 'http://localhost:4321',
+  // Nueva configuración para el servicio de imágenes
+  image: {
+    domains: ['www.datocms-assets.com'],
+  },
+    // Usamos la URL dinámica que acabamos de definir.
+  site: siteUrl,
   output: 'static',
   publicDir: './public',
   integrations: [

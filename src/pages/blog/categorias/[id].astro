@@ -4,17 +4,11 @@ import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import FormattedDate from '../../../components/FormattedDate.astro';
 import { SITE_TITLE } from '../../../consts';
-
-// Función para generar slugs, por si la necesitamos para los títulos de los posts.
-function slugify(text) {
-    return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
-}
+import { fetchDatoCMS } from '../../../lib/datocms.js';
+import { slugify } from '../../../utils.js';
 
 // 1. Generar una página estática para cada categoría existente
 export async function getStaticPaths() {
-    const DATO_API_URL = 'https://graphql.datocms.com/';
-    const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
-
     const query = `
         query AllCategorias {
             allArticulos {
@@ -26,25 +20,10 @@ export async function getStaticPaths() {
         }
     `;
 
-    const response = await fetch(DATO_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${DATO_API_TOKEN}`
-        },
-        body: JSON.stringify({ query })
-    });
-
-    const result = await response.json();
-
-    if (result.errors || !result.data) {
-        console.error('Error al obtener categorías desde DatoCMS:', result.errors);
-        throw new Error('La consulta de categorías a DatoCMS falló.');
-    }
+    const data = await fetchDatoCMS({ query });
 
     // Extraemos todas las categorías de todos los artículos y eliminamos duplicados
-    const allCategoriesWithDuplicates = result.data.allArticulos.flatMap(articulo => articulo.categorias);
+    const allCategoriesWithDuplicates = data.allArticulos.flatMap(articulo => articulo.categorias);
     const uniqueCategories = allCategoriesWithDuplicates.reduce((acc, current) => {
         if (!acc.find(item => item.id === current.id)) {
             acc.push(current);
@@ -66,9 +45,6 @@ const { id } = Astro.params;
 const { category } = Astro.props;
 
 // 2. Obtener los posts que pertenecen a esta categoría
-const DATO_API_URL = 'https://graphql.datocms.com/';
-const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
-
 // Usamos el ID de la categoría para filtrar los artículos.
 // La consulta `any: true` busca si el ID de la categoría está en la lista de categorías del artículo.
 const postsQuery = `
@@ -84,24 +60,14 @@ const postsQuery = `
     }
 `;
 
-const postsResponse = await fetch(DATO_API_URL, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${DATO_API_TOKEN}`
-    },
-    body: JSON.stringify({ query: postsQuery, variables: { id } })
-});
-
-const postsResult = await postsResponse.json();
-
-if (postsResult.errors) {
-    console.error(`Error al obtener posts para la categoría ${id}:`, postsResult.errors);
+let posts = [];
+try {
+    const data = await fetchDatoCMS({ query: postsQuery, variables: { id } });
+    posts = data?.allArticulos || [];
+} catch (error) {
+    console.error(`Error al obtener posts para la categoría ${id}:`, error.message);
     // No lanzamos un error para que la página aún pueda mostrar el encabezado
 }
-
-const posts = postsResult.data?.allArticulos || [];
 
 if (!category) {
     // Previene un error si la página se intenta renderizar sin las props correctas

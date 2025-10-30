@@ -57,12 +57,29 @@ const { pages } = Astro.props;
 			</form>
 			<div id="newsletter-message" class="newsletter-message"></div>
 		</div>
-		<div class="copyright">
+								<div class="copyright">
 			<p>© {new Date().getFullYear()} Joaquín. Todos los derechos reservados.</p>
+			<p class="admin-links">
+				<a href="https://webgae.admin.datocms.com/editor" target="_blank" rel="noopener noreferrer">Admin</a>
+				<span>&nbsp;|&nbsp;</span>
+				<a href="/sitemap-index.xml" target="_blank" rel="noopener noreferrer">Sitemap</a>
+			</p>
 		</div>
 	</div>
 </footer>
 <style>
+		.admin-links {
+		margin-top: 0.5rem;
+		font-size: 0.8em;
+		opacity: 0.7;
+	}
+	.admin-links a {
+		color: inherit;
+		text-decoration: underline;
+	}
+	.admin-links a:hover {
+		opacity: 1;
+	}
 	footer {
 		padding: 4rem 1.5rem 0;
 		background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);

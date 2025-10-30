@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import ArticleCard from '../../components/ArticleCard.astro'; // Importamos el nuevo componente
 import { SITE_TITLE } from '../../consts';
 
 function slugify(text) {
@@ -140,7 +141,7 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 				padding: 0 1.5rem;
 				box-sizing: border-box;
 			}
-			.posts-list {
+						.posts-list {
 				display: grid;
 				grid-template-columns: repeat(2, 1fr);
 				gap: 1.5rem;
@@ -148,79 +149,8 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 				margin: 0;
 				padding: 0;
 			}
-			.posts-list li {
-				background-color: #fff;
-				border-radius: 12px;
-				padding: 1rem; /* Añade espacio interno a la tarjeta */
-				overflow: hidden;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-				transition: transform 0.2s, box-shadow 0.2s;
-			}
-			.posts-list li:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-			}
-			.article-card {
-				display: flex;
-				align-items: center; /* Centra verticalmente la imagen y el texto */
-				text-decoration: none;
-				height: 100%;
-			}
-			.post-image-container {
-				flex-shrink: 0; /* Evita que la imagen se encoja */
-				width: 60px; /* Ancho más pequeño para la imagen */
-				height: 60px; /* Misma altura para que sea un círculo */
-				overflow: hidden;
-				border-radius: 50%; /* Hace que la imagen sea redonda */
-			}
-			.post-image {
-				width: 100%;
-				height: 100%;
-				object-fit: cover; /* Asegura que la imagen cubra el contenedor sin deformarse */
-			}
-			.article-content {
-				padding-left: 1rem; /* Reduce el margen entre la imagen y el texto */
-				display: flex;
-				flex-direction: column;
-				flex-grow: 1; /* Hace que esta sección ocupe el espacio restante */
-				justify-content: center; /* Centra el contenido de texto verticalmente */
-			}
-			.title {
-				margin: 0;
-				font-size: 1.25rem;
-				color: rgb(var(--gray-dark));
-				line-height: 1.3;
-			}
-			.title-wrapper {
-				display: flex;
-				align-items: center;
-				flex-wrap: wrap; /* Permite que las categorías pasen a la siguiente línea si no caben */
-				gap: 0.5rem;
-			}
-			.title-link {
-				text-decoration: none; /* Elimina el subrayado del título */
-				color: inherit; /* Asegura que el título herede el color de .title */
-			}
-			.post-text {
-				flex-grow: 1; /* Para que el texto ocupe el espacio disponible */
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-			}
-			.categories-container {
-				display: flex;
-				gap: 0.5rem;
-			}
-			.category-tag {
-				display: inline-block;
-				padding: 0.25rem 0.75rem;
-				background-color: rgba(var(--accent-rgb), 0.1);
-				color: rgb(var(--accent));
-				border-radius: 9999px;
-				text-decoration: none;
-				font-size: 0.8rem;
-				font-weight: 600;
-			}
+			/* Eliminamos los estilos de la tarjeta individual porque ahora están en el componente */
+
 			#no-results {
 				width: 100%;
 				text-align: center;
@@ -280,37 +210,13 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
 		<Header />
 		<main>
 			<div class="blog-container">
-                <div class="posts-container">
+                                <div class="posts-container">
                     <ul class="posts-list">
-                        {posts && posts.map((post) => {
-                            const { titulo, _firstPublishedAt, categorias, imagen } = post;
-                            const pubDate = _firstPublishedAt;
-                            return (
-                                <li>
-                                    <div class="article-card">
-                                        {imagen && (
-                                            <a href={`/blog/${slugify(post.titulo)}/`} class="post-image-container">
-                                                <Image class="post-image" src={imagen.url} alt={imagen.alt || `Imagen para ${titulo}`} width={60} height={60} />
-                                            </a>
-                                        )}
-                                        <div class="article-content">
-                                            <div class="post-text">
-                                                <div class="title-wrapper">
-                                                    <a href={`/blog/${slugify(post.titulo)}/`} class="title-link">
-                                                        <h4 class="title">{titulo}</h4>
-                                                    </a>
-                                                    {categorias && categorias.length > 0 && (
-                                                        <div class="categories-container">
-                                                            {categorias.map(cat => <a href={`/blog/categorias/${cat.id}/`} class="category-tag">{cat.desarrolloweb}</a>)}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            );
-                        })}
+                        {posts && posts.map((post) => (
+                            <li>
+                                <ArticleCard {post} />
+                            </li>
+                        ))}
                     </ul>
 
                     {posts && posts.length === 0 && (

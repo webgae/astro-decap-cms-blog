@@ -1,20 +1,32 @@
-
+// src/pages/rss.xml.js
 import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { getCollection } from 'astro:content';
+import { fetchDatoCMS } from '../lib/datocms.js';
+import { slugify } from '../utils.js';
 
 export async function GET(context) {
-	const posts = await getCollection('blog');
+  const query = `
+    query AllArticulos {
+      allArticulos(orderBy: _firstPublishedAt_DESC) {
+        titulo
+        _firstPublishedAt
+        contenidoPost
+      }
+    }
+  `;
 
-	return rss({
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
-		site: context.site,
-		items: posts.map((post) => ({
-			title: post.data.title,
-			pubDate: post.data.pubDate,
-			description: post.data.description || post.data.title,
-			link: `/blog/${post.slug}/`,
-		})),
-	});
+  const data = await fetchDatoCMS({ query });
+  const posts = data.allArticulos;
+
+  return rss({
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    site: context.site,
+    items: posts.map((post) => ({
+      title: post.titulo,
+      pubDate: post._firstPublishedAt,
+      description: post.contenidoPost.substring(0, 150) + '...', // Truncate description
+      link: `/blog/${slugify(post.titulo)}/`, // Generate slug from title
+    })),
+  });
 }
