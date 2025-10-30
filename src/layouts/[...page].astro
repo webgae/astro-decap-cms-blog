@@ -1,0 +1,211 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { SITE_TITLE } from '../../../consts';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { fetchDatoCMS } from '../../../lib/datocms.js';
+import { getCollection } from 'astro:content';
+
+const PAGE_SIZE = 10;
+
+export async function getStaticPaths({ paginate }) {
+    const query = `
+        query AllCategorias {
+            allArticulos {
+                categorias {
+                    id
+                    desarrolloweb
+                }
+            }
+        }
+    `;
+
+    const data = await fetchDatoCMS({ query });
+    // Extraemos todas las categorías de todos los artículos y eliminamos duplicados
+    const allCategoriesWithDuplicates = data.allArticulos.flatMap(articulo => articulo.categorias);
+    const uniqueCategories = allCategoriesWithDuplicates.reduce((acc, current) => {
+        if (!acc.find(item => item.id === current.id)) {
+            acc.push(current);
+        }
+        return acc;
+    }, []);
+
+    const pagePaths = [];
+
+    for (const category of uniqueCategories) {
+        const postsQuery = `
+            query ArticulosPorCategoria($id: ItemId!) {
+                allArticulos(
+                    filter: { categorias: { anyIn: [$id] } }
+                    orderBy: _firstPublishedAt_DESC
+                ) {
+                    id
+                    titulo
+                    _firstPublishedAt
+                    imagen { url, alt }
+                    categorias { id, desarrolloweb }
+                }
+            }
+        `;
+        const postsData = await fetchDatoCMS({ query: postsQuery, variables: { id: category.id } });
+        const postsForCategory = postsData.allArticulos || [];
+
+        // Usamos paginate para esta categoría
+        const paginatedResult = paginate(postsForCategory, {
+            pageSize: PAGE_SIZE,
+            params: { id: category.id },
+            props: { category }
+        });
+        pagePaths.push(...paginatedResult);
+    }
+
+    return pagePaths;
+}
+
+const { page } = Astro.props;
+const { category } = page.props;
+const posts = page.data;
+
+if (!category) {
+    return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const pageTitle = `Posts en "${category.desarrolloweb}" - ${SITE_TITLE}`;
+const pageDescription = `Explora todos los artículos en la categoría ${category.desarrolloweb}.`;
+
+const legalPages = await getCollection('pages');
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    <style>
+        .category-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 1rem;
+        }
+        .category-header h1 {
+            font-size: 2.5rem;
+            color: rgb(var(--gray-dark));
+            margin: 0;
+        }
+        .category-header p {
+            font-size: 1.1rem;
+            color: rgb(var(--gray));
+            margin-top: 0.5rem;
+        }
+        .blog-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            box-sizing: border-box;
+            margin-bottom: 4rem;
+        }
+        .posts-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        #no-results {
+            text-align: center;
+            padding: 2rem;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .page-number, .pagination a {
+            padding: 0.75rem 1rem;
+            border: 1px solid rgb(var(--gray-light));
+            border-radius: 8px;
+            text-decoration: none;
+            background-color: rgb(var(--component-bg));
+            color: rgb(var(--gray-dark));
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+        .dark .page-number, .dark .pagination a {
+            background-color: rgb(var(--component-bg));
+            color: rgb(var(--black));
+        }
+        .page-number:hover, .pagination a:hover {
+            background-color: rgb(var(--accent));
+            color: white;
+            border-color: rgb(var(--accent));
+        }
+        .page-number.current {
+            background-color: rgb(var(--accent));
+            color: rgb(10, 4, 4);
+            border-color: rgb(var(--accent));
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .posts-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <Header />
+    <main>
+        <div class="blog-container">
+            <div class="category-header">
+                <p>Mostrando posts en la categoría:</p>
+                <h1>{category.desarrolloweb}</h1>
+            </div>
+
+            <div class="posts-container">
+                {posts.length > 0 ? (
+                    <ul class="posts-list">
+                        {posts.map((post) => (
+                            <li><ArticleCard {post} /></li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div id="no-results">
+                        <h3>No se encontraron artículos en esta categoría.</h3>
+                    </div>
+                )}
+
+                {page.lastPage > 1 && (
+                    <div class="pagination">
+                        {page.url.prev && <a href={page.url.prev}>&laquo; Anteriores</a>}
+                        <div class="page-numbers">
+                            {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(pageNum => {
+                                const isCurrentPage = pageNum === page.currentPage;
+                                const pageUrl = pageNum === 1 ? `/blog/categorias/${category.id}/` : `/blog/categorias/${category.id}/${pageNum}/`;
+                                return isCurrentPage ? (
+                                    <span class="page-number current">{pageNum}</span>
+                                ) : (
+                                    <a href={pageUrl} class="page-number">{pageNum}</a>
+                                );
+                            })}
+                        </div>
+                        {page.url.next && <a href={page.url.next}>Siguientes &raquo;</a>}
+                    </div>
+                )}
+            </div>
+        </div>
+    </main>
+    <Footer pages={legalPages} />
+</body>
+</html>

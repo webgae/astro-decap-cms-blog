@@ -1,0 +1,123 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { SITE_TITLE } from '../../../consts';
+import { fetchDatoCMS } from '../../../lib/datocms.js';
+import { getCollection } from 'astro:content';
+
+export const prerender = true;
+
+const query = `
+    query AllCategorias {
+        allArticulos {
+            categorias {
+                id
+                desarrolloweb
+            }
+        }
+    }
+`;
+
+const data = await fetchDatoCMS({ query });
+
+// Extraemos todas las categorías de todos los artículos y eliminamos duplicados
+const allCategoriesWithDuplicates = data.allArticulos.flatMap(articulo => articulo.categorias);
+const uniqueCategories = allCategoriesWithDuplicates.reduce((acc, current) => {
+    if (!acc.find(item => item.id === current.id)) {
+        acc.push(current);
+    }
+    return acc;
+}, []);
+
+const pageTitle = `Todas las Categorías - ${SITE_TITLE}`;
+const pageDescription = "Explora todas las categorías de artículos disponibles en nuestro blog.";
+
+const legalPages = await getCollection('pages');
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    <style>
+        .categories-list-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            box-sizing: border-box;
+            margin-bottom: 4rem;
+        }
+        .categories-list-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 1rem;
+        }
+        .categories-list-header h1 {
+            font-size: 2.5rem;
+            color: rgb(var(--gray-dark));
+            margin: 0;
+        }
+        .categories-list-header p {
+            font-size: 1.1rem;
+            color: rgb(var(--gray));
+            margin-top: 0.5rem;
+        }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .category-item {
+            background-color: rgb(var(--component-bg));
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .category-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-item a {
+            display: block;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: rgb(var(--gray-dark));
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .dark .category-item a {
+            color: rgb(var(--black));
+        }
+        .category-item a:hover {
+            color: rgb(var(--accent));
+        }
+    </style>
+</head>
+<body>
+    <Header />
+    <main>
+        <div class="categories-list-container">
+            <div class="categories-list-header">
+                <h1>Todas las Categorías</h1>
+                <p>Explora los temas de nuestro blog.</p>
+            </div>
+            <ul class="categories-grid">
+                {uniqueCategories.map((category) => (
+                    <li class="category-item">
+                        <a href={`/blog/categorias/${category.id}/`}>
+                            {category.desarrolloweb}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </main>
+    <Footer pages={legalPages} />
+</body>
+</html>

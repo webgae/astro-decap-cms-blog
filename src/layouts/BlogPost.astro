@@ -19,8 +19,8 @@ interface Props {
 	description: string;
 	pubDate: Date;
 	slug: string; // Añadimos la prop para el slug
-	heroImage?: string;
-	categories?: { desarrolloweb: string }[]; // Añadimos la prop para las categorías
+	heroImage?: string; // Añadimos la prop para las categorías
+	categories?: { id: string; desarrolloweb: string }[];
 	pages: CollectionEntry<'pages'>[]; // Prop para las páginas legales
 }
 
@@ -177,9 +177,9 @@ const {
 					</div>
 					<div class="categories-container">
 						{categories.map(cat => (
-							<span class="category-tag">
+							<a href={`/blog/categorias/${cat.id}/`} class="category-tag">
 								{cat.desarrolloweb}
-							</span>
+							</a>
 						))}
 					</div>
 					<hr />
