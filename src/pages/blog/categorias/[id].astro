@@ -2,9 +2,10 @@
 import BaseHead from '../../../components/BaseHead.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import FormattedDate from '../../../components/FormattedDate.astro';
 import { SITE_TITLE } from '../../../consts';
+import ArticleCard from '../../../components/ArticleCard.astro';
 import { fetchDatoCMS } from '../../../lib/datocms.js';
+import { getCollection } from 'astro:content';
 import { slugify } from '../../../utils.js';
 
 // 1. Generar una página estática para cada categoría existente
@@ -56,6 +57,14 @@ const postsQuery = `
             id
             titulo
             _firstPublishedAt
+            imagen {
+                url
+                alt
+            }
+            categorias {
+                id
+                desarrolloweb
+            }
         }
     }
 `;
@@ -76,6 +85,9 @@ if (!category) {
 
 const pageTitle = `Posts en "${category.desarrolloweb}" - ${SITE_TITLE}`;
 const pageDescription = `Explora todos los artículos en la categoría ${category.desarrolloweb}.`;
+
+// Obtenemos las páginas legales para el footer
+const legalPages = await getCollection('pages');
 ---
 
 <!doctype html>
@@ -102,6 +114,10 @@ const pageDescription = `Explora todos los artículos en la categoría ${categor
             color: rgb(var(--gray));
             margin-top: 0.5rem;
         }
+        .blog-container {
+            /* Añadimos margen inferior para separar del footer */
+            margin-bottom: 4rem;
+        }
 
         /* Estilos copiados de la página principal del blog para consistencia */
         .posts-list {
@@ -112,36 +128,7 @@ const pageDescription = `Explora todos los artículos en la categoría ${categor
             margin: 0;
             padding: 0;
         }
-        .posts-list li {
-            background-color: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .posts-list li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-        .article-card {
-            display: block;
-            text-decoration: none;
-            height: 100%;
-        }
-        .article-content {
-            padding: 1.5rem;
-        }
-        .title {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.25rem;
-            color: rgb(var(--gray-dark));
-            line-height: 1.3;
-        }
-        .date {
-            margin: 0;
-            font-size: 0.9rem;
-            color: rgb(var(--gray));
-        }
+
         #no-results {
             text-align: center;
             padding: 2rem;
@@ -166,18 +153,7 @@ const pageDescription = `Explora todos los artículos en la categoría ${categor
                 {posts.length > 0 ? (
                     <ul class="posts-list">
                         {posts.map((post) => (
-                            <li>
-                                <a href={`/blog/${slugify(post.titulo)}/`} class="article-card">
-                                    <div class="article-content">
-                                        <div class="post-text">
-                                            <h4 class="title">{post.titulo}</h4>
-                                            <p class="date">
-                                                <FormattedDate date={new Date(post._firstPublishedAt)} />
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
+                            <li><ArticleCard {post} /></li>
                         ))}
                     </ul>
                 ) : (
@@ -188,6 +164,6 @@ const pageDescription = `Explora todos los artículos en la categoría ${categor
             </div>
         </div>
     </main>
-    <Footer />
+    <Footer pages={legalPages} />
 </body>
 </html>

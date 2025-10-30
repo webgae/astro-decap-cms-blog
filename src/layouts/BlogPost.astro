@@ -5,6 +5,7 @@ import Layout from './Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
 import TocController from '../components/TocController.jsx';
 import Giscus from '../components/Giscus.astro';
  
@@ -20,18 +21,20 @@ interface Props {
 	slug: string; // Añadimos la prop para el slug
 	heroImage?: string;
 	categories?: { desarrolloweb: string }[]; // Añadimos la prop para las categorías
+	pages: CollectionEntry<'pages'>[]; // Prop para las páginas legales
 }
 
 const { 
 	title, description, pubDate, 
 	slug, 
-	heroImage, categories = [] 
+	heroImage, categories = [],
+	pages
 } = Astro.props;
 ---
 <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": title,
+    "headline": title, // El título ya se pasa como prop
     "description": description,
     "datePublished": pubDate ? pubDate.toISOString() : new Date().toISOString(),
     "dateModified": pubDate ? pubDate.toISOString() : new Date().toISOString(),
@@ -80,7 +83,7 @@ const {
         "@id": new URL('/', Astro.site).href
     }
 })} />
-<Layout title={title} description={description}>
+<Layout title={title} description={description} pages={pages}>
 	<style>
 		.hero-image {
 			width: 100%;

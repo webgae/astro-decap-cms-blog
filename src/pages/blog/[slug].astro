@@ -3,6 +3,7 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import { fetchDatoCMS, getOptimizedImageUrl } from '../../lib/datocms.js';
 import { slugify } from '../../utils.js';
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
     const query = `
@@ -41,6 +42,7 @@ const query = `
             id
             titulo
             contenidoPost
+            metadescription
             fecha
             imagen {
                 url
@@ -62,8 +64,16 @@ if (!post) {
     return Astro.redirect('/404');
 }
 
-const { titulo, contenidoPost, fecha, imagen, categorias } = post;
+const { titulo, contenidoPost, metadescription, fecha, imagen, categorias } = post;
 const pubDate = fecha;
+
+// Lógica para la meta descripción:
+// 1. Usa la meta descripción personalizada si existe.
+// 2. Si no, crea un extracto del contenido del post.
+const description = metadescription || // Ahora es un texto simple, no un objeto
+    (contenidoPost 
+        ? contenidoPost.replace(/<[^>]*>?/gm, '').substring(0, 155) + '...' 
+        : 'Lee más sobre este artículo en el blog.');
 
 const optimizedHeroImage = imagen ? getOptimizedImageUrl({
     src: imagen.url,
@@ -71,14 +81,18 @@ const optimizedHeroImage = imagen ? getOptimizedImageUrl({
     format: 'webp',
     fit: 'max' // 'max' para ajustar sin cortar
 }) : null;
+
+// Obtenemos las páginas legales para pasarlas al layout
+const legalPages = await getCollection('pages');
 ---
 
 <BlogPost
     slug={slug}
     title={titulo}
-    description="Artículo de blog"
+    description={description}
     pubDate={new Date(pubDate)}
         categories={categorias}
+    pages={legalPages}
 >
     {optimizedHeroImage && (
         <Image 

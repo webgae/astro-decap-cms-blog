@@ -6,6 +6,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import ArticleCard from '../../components/ArticleCard.astro'; // Importamos el nuevo componente
 import { SITE_TITLE } from '../../consts';
+import { getCollection } from 'astro:content';
 import { slugify } from '../../utils.js';
 
 export const prerender = true;
@@ -116,6 +117,9 @@ console.log('Posts array:', posts);
 
 const pageTitle = `Blog - ${SITE_TITLE}`;
 const pageDescription = "Explora nuestros últimos artículos, tutoriales y noticias sobre desarrollo web y tecnología.";
+
+// Obtenemos las páginas legales para el footer
+const legalPages = await getCollection('pages');
 ---
 
 <!doctype html>
@@ -273,7 +277,7 @@ const pageDescription = "Explora nuestros últimos artículos, tutoriales y noti
                 </div>
 			</div>
 		</main>
-		<Footer />
+		<Footer pages={legalPages} />
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const searchInput = document.getElementById('search-input') as HTMLInputElement;

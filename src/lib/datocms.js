@@ -21,7 +21,7 @@ export async function fetchDatoCMS({ query, variables }) {
 
   const result = await response.json();
 
-    if (result.errors) {
+  if (result.errors) {
     console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     console.error("!!        ERRORES DESDE DATOCMS API         !!");
     console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -38,7 +38,7 @@ export async function fetchDatoCMS({ query, variables }) {
     throw new Error('No se recibieron datos de la API. Verifica la query y los permisos del token.');
   }
 
-    return result.data;
+  return result.data;
 }
 
 /**
@@ -66,4 +66,3 @@ export function getOptimizedImageUrl({ src, width, height, fit = 'crop', format 
 
   return url.toString();
 }
-
