@@ -51,11 +51,10 @@ const { pages } = Astro.props;
 		<div class="newsletter">
 			<h4>¿Quieres estar al día?</h4>
 			<p>Suscríbete para recibir las últimas actualizaciones y consejos sobre desarrollo web.</p>
-			<form class="newsletter-form" id="newsletter-form">
-				<input type="email" name="email" placeholder="Tu email..." class="newsletter-input" required>
-				<button type="submit" class="newsletter-btn">Suscribirse</button>
+			<form class="newsletter-form" action="https://api.follow.it/subscription-form/UCtwV0RUTGY3SFh5WHNQa3lGcjRDT2R1eEsyQmNLMGtUekEvUWdoa0pESDJIZ2FGSUY4RUpGdU5iZkpldlErTjcxYUpSQkhDNTNFMEhWNnhKSXh2OTcvL1ZUS2dWaGRmaUNITkhBWXplalNSM1JJMTRRUUlocUI5ajE1ZE5OZy98ckdWbmtRdWJFakxmWjFRMWxWT3VZT2JDcnRHSUppenhiQmV2cW0wOWROMD0=/8" method="post">
+				<input type="email" name="email" required placeholder="Tu email..." />
+				<button type="submit">Suscribirme</button>
 			</form>
-			<div id="newsletter-message" class="newsletter-message"></div>
 		</div>
 								<div class="copyright">
 			<p>© {new Date().getFullYear()} Joaquín. Todos los derechos reservados.</p>
@@ -187,36 +186,6 @@ const { pages } = Astro.props;
 		width: 100%;
 	}
 
-	.social-links {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.social-link {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
-		background-color: rgb(var(--component-bg));
-		color: rgb(var(--text));
-		text-decoration: none;
-		border-radius: 8px;
-		border: 1px solid rgb(var(--gray-light));
-		transition: all 0.3s ease;
-		font-weight: 500;
-	}
-
-	.social-link:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		background-color: rgb(var(--accent));
-		color: white;
-	}
-
-	.social-icon {
-		font-size: 1.2rem;
-	}
 
 	.footer-bottom {
 		max-width: 1280px;
@@ -226,57 +195,6 @@ const { pages } = Astro.props;
 		grid-template-columns: 2fr 1fr;
 		gap: 2rem;
 		align-items: start;
-	}
-
-	.newsletter h4 {
-		color: white;
-		margin-bottom: 0.5rem;
-		font-size: 1.1rem;
-	}
-
-	.newsletter p {
-		color: rgba(255, 255, 255, 0.8);
-		margin-bottom: 1.5rem;
-		line-height: 1.6;
-	}
-
-	.newsletter-form {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.newsletter-input {
-		flex: 1;
-		padding: 0.75rem 1rem;
-		border: 1px solid rgb(var(--gray-light));
-		border-radius: 8px;
-		background-color: rgb(var(--component-bg));
-		color: rgb(var(--text));
-		font-size: 0.9rem;
-		transition: all 0.3s ease;
-	}
-
-	.newsletter-input:focus {
-		outline: none;
-		border-color: rgb(var(--accent));
-		box-shadow: 0 0 0 3px rgba(var(--accent), 0.1);
-	}
-
-	.newsletter-btn {
-		padding: 0.75rem 1.5rem;
-		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-		color: white;
-		border: none;
-		border-radius: 8px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.3s ease;
-		white-space: nowrap;
-	}
-
-	.newsletter-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(var(--accent), 0.3);
 	}
 
 	.copyright {
@@ -301,73 +219,52 @@ const { pages } = Astro.props;
 		background-color: rgb(var(--gray-light));
 	}
 
-	/* Estilos para el desplegable de páginas */
-	.pages-dropdown {
-		position: relative;
+	/* Estilos para el formulario de suscripción */
+	.newsletter-form {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 1rem;
 	}
 
-	.dropdown-toggle {
-		width: 100%;
+	.newsletter-form input {
+		flex-grow: 1;
 		padding: 0.75rem 1rem;
-		background: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
 		border: 1px solid rgba(255, 255, 255, 0.2);
 		border-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.1);
 		color: white;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 0.9rem;
-		font-weight: 500;
-		transition: all 0.3s ease;
+		font-size: 1rem;
+		transition: background-color 0.3s, border-color 0.3s;
 	}
 
-	.dropdown-toggle:hover {
-		background: rgba(255, 255, 255, 0.15);
-		border-color: rgba(255, 255, 255, 0.3);
+	.newsletter-form input::placeholder {
+		color: rgba(255, 255, 255, 0.6);
 	}
 
-	.dropdown-arrow {
-		transition: transform 0.3s ease;
-		font-size: 0.8rem;
+	.newsletter-form input:focus {
+		outline: none;
+		background-color: rgba(255, 255, 255, 0.15);
+		border-color: rgb(var(--accent));
 	}
 
-	.dropdown-toggle.active .dropdown-arrow {
-		transform: rotate(180deg);
-	}
-
-	.dropdown-content {
-		max-height: 0;
-		overflow: hidden;
-		transition: max-height 0.4s ease;
-		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.02) 100%);
+	.newsletter-form button {
+		padding: 0.75rem 1.5rem;
+		border: 2px solid #08d9d6; /* Borde cian para destacar */
 		border-radius: 8px;
-		margin-top: 0.5rem;
-		border: 1px solid rgb(var(--gray-light));
+		background-color: transparent; /* Fondo transparente/negro */
+		color: white;
+		font-weight: bold;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+		box-shadow: 0 4px 15px -5px #08d9d655; /* Sombra más sutil */
+		will-change: transform;
 	}
 
-	.dropdown-content.open {
-		max-height: 300px;
-		padding: 1rem;
-		overflow-y: auto;
-	}
-
-	.dropdown-content li {
-		margin-bottom: 0.5rem;
-	}
-
-	.dropdown-content li:last-child {
-		margin-bottom: 0;
-	}
-
-	.dark .dropdown-toggle {
-		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.08) 100%);
-		color: rgb(var(--text));
-	}
-
-	.dark .dropdown-content {
-		background: linear-gradient(135deg, rgb(var(--component-bg)) 0%, rgba(var(--accent), 0.05) 100%);
+	.newsletter-form button:hover {
+		background-color: #08d9d6; /* Relleno cian en hover */
+		color: #1a1a1a; /* Texto oscuro en hover para contraste */
+		transform: scale(1.05);
+		box-shadow: 0 6px 20px -5px #08d9d699;
 	}
 
 	/* Responsive */
@@ -395,112 +292,6 @@ const { pages } = Astro.props;
 			flex-direction: column;
 		}
 
-		.newsletter-btn {
-			width: 100%;
-		}
 	}
 
-	.newsletter-message {
-		margin-top: 1rem;
-		padding: 0.75rem;
-		border-radius: 8px;
-		text-align: center;
-		font-weight: 500;
-		display: none;
-		animation: slideDown 0.3s ease-out;
-	}
-
-	@keyframes slideDown {
-		from {
-			opacity: 0;
-			transform: translateY(-10px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	.newsletter-message.success {
-		background-color: #e6fffa;
-		color: #38a169;
-		border: 1px solid #9ae6b4;
-	}
-
-	.newsletter-message.error {
-		background-color: #fff5f5;
-		color: #c53030;
-		border: 1px solid #feb2b2;
-	}
 </style>
-
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		// Newsletter form functionality
-		const form = document.getElementById('newsletter-form');
-		const messageDiv = document.getElementById('newsletter-message');
-
-		if (form && messageDiv) {
-			form.addEventListener('submit', async (e) => {
-				e.preventDefault();
-
-				const formData = new FormData(form);
-				const email = formData.get('email');
-
-				if (!email) {
-					showMessage('Por favor, introduce un email válido.', 'error');
-					return;
-				}
-
-				try {
-					const response = await fetch('/api/newsletter', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({ email }),
-					});
-
-					const data = await response.json();
-
-					if (response.ok) {
-						showMessage('¡Gracias por suscribirte! Recibirás nuestras actualizaciones pronto.', 'success');
-						form.reset();
-					} else {
-						showMessage(data.message || 'Error al procesar la suscripción.', 'error');
-					}
-				} catch (error) {
-					console.error('Error:', error);
-					showMessage('Error de conexión. Inténtalo de nuevo.', 'error');
-				}
-			});
-		}
-
-		function showMessage(message, type) {
-			messageDiv.textContent = message;
-			messageDiv.className = `newsletter-message ${type}`;
-			messageDiv.style.display = 'block';
-
-			setTimeout(() => {
-				messageDiv.style.display = 'none';
-			}, 5000);
-		}
-
-		// Dropdown functionality for pages
-		const dropdownToggle = document.getElementById('pages-toggle');
-		const dropdownContent = document.getElementById('pages-list');
-
-		if (dropdownToggle && dropdownContent) {
-			dropdownToggle.addEventListener('click', () => {
-				const isOpen = dropdownContent.classList.contains('open');
-				dropdownToggle.classList.toggle('active');
-
-				if (isOpen) {
-					dropdownContent.classList.remove('open');
-				} else {
-					dropdownContent.classList.add('open');
-				}
-			});
-		}
-	});
-</script>
