@@ -19,20 +19,16 @@ export async function getStaticPaths() {
     const posts = data.allArticulos;
 
     if (!posts) return [];
-
+ 
     return posts.map((post) => ({
         params: { slug: slugify(post.titulo) },
-        props: { posts }
+        props: { postId: post.id } // Pasamos solo el ID del post
     }));
 }
 
-const { slug } = Astro.params;
-const { posts } = Astro.props;
-
-// Convertir slug de URL a ID para buscar en DatoCMS
-const postId = posts.find(p => slugify(p.titulo) === slug)?.id;
+const { postId, slug } = { ...Astro.props, ...Astro.params };
 if (!postId) {
-    console.error('Post not found for slug:', slug);
+    console.error(`No se encontró un postId para el slug: ${slug}. Revisa getStaticPaths.`);
     return Astro.redirect('/404');
 }
 
@@ -60,7 +56,7 @@ const data = await fetchDatoCMS({ query, variables: { id: postId } });
 const post = data?.articulo;
 
 if (!post) {
-    console.error('Post not found for ID:', slug.replace('post-', ''));
+    console.error(`Post no encontrado en DatoCMS con ID: ${postId}`);
     return Astro.redirect('/404');
 }
 

@@ -21,33 +21,30 @@ Hemos migrado la gestión de contenido de Decap CMS a DatoCMS para una experienc
 
 ### **Progreso Realizado:**
 
-1.  **Limpieza:** Se eliminaron todos los archivos y configuraciones relacionados con Decap CMS.
-2.  **Configuración de DatoCMS:**
+*   **Limpieza:** Se eliminaron todos los archivos y configuraciones relacionados con Decap CMS.
+*   **Configuración de DatoCMS:**
     *   Se creó una cuenta y un proyecto en DatoCMS.
-    *   Se definió el modelo de contenido `Post` (o `Article`) con campos como `title`, `slug`, `body`, `coverImage`, `_firstPublishedAt`.
+    *   Se definió el modelo de contenido `Articulo` con campos como `titulo`, `contenidoPost`, `imagen`, `_firstPublishedAt`, `categorias` y `metadescription` (como "Single-line String").
     *   Se creó un post de prueba y se publicó en DatoCMS.
     *   Se obtuvo el `Read-only API token` de DatoCMS y se añadió al archivo `.env` como `DATO_API_TOKEN`.
-    *   Se añadió `PUBLIC_DATO_API_URL=https://graphql.datocms.com/` al archivo `.env`.
-3.  **Adaptación del Código Astro:**
-    *   Las páginas `src/pages/blog/[slug].astro` y `src/pages/blog/[...page].astro` han sido modificadas para:
+*   **Adaptación y Mejoras del Código Astro:**
+    *   Las páginas `src/pages/blog/[slug].astro` y `src/pages/blog/[...page].astro` han sido refactorizadas para:
         *   Conectarse a la API GraphQL de DatoCMS.
         *   Usar el `DATO_API_TOKEN` para la autorización.
         *   Adaptarse a la estructura de datos de DatoCMS (sin el objeto `attributes` anidado).
         *   Convertir la fecha (`_firstPublishedAt`) a un objeto `Date` para el componente `FormattedDate`.
-        *   Manejar la paginación correctamente.
-        *   Se han movido las definiciones de `DATO_API_URL` y `DATO_API_TOKEN` dentro de las funciones `getStaticPaths` y el cuerpo del componente para resolver problemas de ámbito.
-
-### **Problema Actual (Pendiente de Solución):**
-
-Actualmente, la página principal del blog (`/blog`) está mostrando un error en la consola (y posiblemente en la página) relacionado con la obtención del conteo de posts de DatoCMS:
-
-`TypeError: Cannot read properties of undefined (reading 'count')`
-
-Esto indica que la respuesta de DatoCMS para la consulta `_allPostsMeta` no está devolviendo la estructura esperada, o que hay un problema de permisos con el token.
-
-### **Próximo Paso:**
-
-El siguiente paso es depurar este error. Necesitamos ver la respuesta exacta que DatoCMS está enviando para la consulta `_allPostsMeta`.
+        *   Manejar la paginación de forma robusta con `paginate`.
+        *   Asegurar que los artículos nuevos se generen correctamente tras una reconstrucción del sitio.
+    *   **SEO:**
+        *   El campo `metadescription` de DatoCMS se utiliza ahora para las meta descripciones de los artículos, con una lógica de fallback inteligente que genera un extracto del contenido si no está presente.
+    *   **Estilos:**
+        *   Los bloques de código (`<pre><code>`) y el código en línea (`<code>`) han sido estilizados para una mejor legibilidad y presentación.
+        *   El botón de suscripción en el footer ha sido mejorado visualmente para resaltar.
+    *   **Funcionalidad:**
+        *   Se ha añadido un buscador interactivo a la página principal del blog para filtrar artículos por título en tiempo real.
+        *   La función `slugify` ha sido unificada en `src/utils.js` para asegurar la consistencia en la generación de URLs.
+        *   Las páginas de categorías (`src/pages/blog/categorias/[id].astro`) ahora muestran los artículos usando el componente `ArticleCard` y tienen un espaciado mejorado.
+        *   Los enlaces legales del footer se muestran consistentemente en todas las páginas del blog.
 
 ---
 

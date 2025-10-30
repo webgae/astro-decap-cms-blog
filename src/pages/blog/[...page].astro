@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
+import { fetchDatoCMS } from '../../lib/datocms.js';
 import ArticleCard from '../../components/ArticleCard.astro'; // Importamos el nuevo componente
 import { SITE_TITLE } from '../../consts';
 import { getCollection } from 'astro:content';
@@ -11,109 +12,39 @@ import { slugify } from '../../utils.js';
 
 export const prerender = true;
 
-const PAGE_SIZE = 10;
-
 export async function getStaticPaths({ paginate }) {
-    // FIX: Usar variables de DatoCMS
-    const DATO_API_URL = 'https://graphql.datocms.com/';
-    const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
-
-    const metaQuery = `
-        query AllArticulosMeta {
-            _allArticulosMeta {
-                count
-            }
-            allArticulos {
+    const PAGE_SIZE = 10; // Definimos el tamaño de página aquí
+    const query = `
+        query AllArticulosForPagination {
+            allArticulos(orderBy: _firstPublishedAt_DESC) {
                 id
+                titulo
+                _firstPublishedAt
+                imagen {
+                    url
+                    alt
+                }
+                categorias {
+                    id
+                    desarrolloweb
+                }
             }
         }
     `;
 
-    const metaResponse = await fetch(DATO_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${DATO_API_TOKEN}`
-        },
-        body: JSON.stringify({ query: metaQuery })
-    });
+    const data = await fetchDatoCMS({ query });
+    const allPosts = data.allArticulos;
 
-    const metaResult = await metaResponse.json();
-    console.log('Meta response:', metaResult);
-
-    if (!metaResult.data || !metaResult.data._allArticulosMeta) {
-        console.error('Meta query failed:', metaResult);
-        console.log('Available data:', metaResult.data);
-        throw new Error('No se pudo obtener el conteo de artículos. Verifica el nombre del modelo en DatoCMS.');
+    if (!allPosts) {
+        console.error("No se obtuvieron artículos para la paginación.");
+        return [];
     }
 
-    const totalPosts = metaResult.data._allArticulosMeta.count;
-    console.log('Total posts found:', totalPosts);
-    const pageCount = Math.ceil(totalPosts / 10);
-
-    const pagePaths = Array.from({ length: pageCount || 1 }, (_, i) => ({
-        params: { page: (i + 1).toString() },
-        props: {},
-    }));
-
-    return paginate(pagePaths, { pageSize: 1 });
+    return paginate(allPosts, { pageSize: PAGE_SIZE });
 }
 
 const { page } = Astro.props;
-const currentPage = parseInt(Astro.params.page || '1', 10);
-
-// FIX: Usar variables de DatoCMS
-const DATO_API_URL = 'https://graphql.datocms.com/';
-const DATO_API_TOKEN = import.meta.env.DATO_API_TOKEN;
-
-const postsQuery = `
-    query AllArticulos {
-        allArticulos(first: 10, skip: ${(currentPage - 1) * 10}, orderBy: _firstPublishedAt_DESC) {
-            id
-            titulo
-            _firstPublishedAt
-            categorias {
-                desarrolloweb
-                id
-            }
-            imagen {
-                url
-                alt
-            }
-            categorias {
-                desarrolloweb
-                id
-            }
-        }
-    }
-`;
-
-const postsResponse = await fetch(DATO_API_URL, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${DATO_API_TOKEN}`
-    },
-    body: JSON.stringify({ query: postsQuery })
-});
-
-const postsResult = await postsResponse.json();
-console.log('Posts response:', postsResult);
-
-if (postsResult.errors) {
-    console.error('GraphQL errors:', postsResult.errors);
-    throw new Error('Errores en la query GraphQL. Verifica los campos del modelo.');
-}
-
-if (!postsResult.data) {
-    console.error('Posts query failed - no data:', postsResult);
-    throw new Error('No se pudieron obtener los artículos. Verifica la configuración en DatoCMS.');
-}
-
-const posts = postsResult.data.allArticulos || [];
-console.log('Posts array:', posts);
+const posts = page.data; // Los posts para la página actual vienen directamente de `page.data`
 
 const pageTitle = `Blog - ${SITE_TITLE}`;
 const pageDescription = "Explora nuestros últimos artículos, tutoriales y noticias sobre desarrollo web y tecnología.";
