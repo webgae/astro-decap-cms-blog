@@ -92,9 +92,45 @@ const optimizedHeroImage = imagen ? getOptimizedImageUrl({
     <div set:html={contenidoPost} />
 </BlogPost>
 
-<style>
+<style is:global>
     .categoria {
         margin: 1rem 0;
         font-style: italic;
+    }
+
+    /* Estilos para bloques de código (pre) */
+    pre {
+        background-color: #1a1a1a; /* Fondo oscuro para el bloque de código */
+        color: #e0e0e0; /* Color de texto claro */
+        padding: 1.2em 1.5em;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        overflow-x: auto; /* Permite desplazamiento horizontal si el código es muy largo */
+        font-family: 'Fira Code', 'Cascadia Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: 0.95em;
+        line-height: 1.6;
+        border: 1px solid rgba(8, 217, 214, 0.3); /* Borde sutil con el color de acento */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra para darle profundidad */
+    }
+
+    /* Estilos para el código en línea (code) */
+    code {
+        background-color: rgba(8, 217, 214, 0.1); /* Fondo sutil con el color de acento */
+        color: #08d9d6; /* Color de texto del acento */
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-family: 'Fira Code', 'Cascadia Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: 0.9em;
+        white-space: nowrap; /* Evita que el código en línea se rompa */
+    }
+
+    /* Asegurarse de que el código dentro de pre no tenga el fondo del código en línea */
+    pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: inherit;
+        white-space: pre; /* Mantiene el formato original del código */
     }
 </style>

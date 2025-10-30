@@ -1,8 +1,14 @@
 // src/utils.js
 export function slugify(text) {
-    return text.toString().toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '');
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-') // Reemplaza espacios con -
+        .replace(/[^\w\-]+/g, '') // Elimina caracteres no válidos
+        .replace(/\-\-+/g, '-') // Reemplaza múltiples - con uno solo
+        .replace(/^-+/, '') // Elimina - del inicio
+        .replace(/-+$/, ''); // Elimina - del final
 }
 
 export function getFirstImage(content) {
